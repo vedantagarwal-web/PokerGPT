@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block title %}Register - PokerGPT{% endblock %}
+
+{% block extra_css %}
+<style>
+    .register-container {
+        min-height: calc(100vh - 300px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+    }
+
+    .register-card {
+        width: 100%;
+        max-width: 450px;
+        background: var(--surface-color);
+        border-radius: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+    }
+
+    .register-header {
+        background: linear-gradient(135deg, var(--secondary-dark), var(--secondary-color));
+        padding: 2rem;
+        text-align: center;
+        color: var(--text-color);
+    }
+
+    .register-header h2 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        color: var(--accent-color);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .register-header p {
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    .register-body {
+        padding: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+
+    .password-requirements {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        padding-left: 1rem;
+    }
+
+    .password-requirements ul {
+        list-style: none;
+        padding: 0;
+        margin: 0.5rem 0 0;
+    }
+
+    .password-requirements li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .password-requirements li i {
+        color: var(--text-muted);
+    }
+
+    .password-requirements li.valid i {
+        color: var(--secondary-color);
+    }
+
+    .register-btn {
+        background: linear-gradient(45deg, var(--secondary-color), var(--secondary-dark));
+        color: white;
+        border: none;
+        width: 100%;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .register-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .login-link {
+        text-align: center;
+        color: var(--text-muted);
+    }
+
+    .login-link a {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: 500;
+        margin-left: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .login-link a:hover {
+        color: var(--accent-light);
+    }
+
+    .alert {
+        display: none;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        text-align: center;
+    }
+
+    .alert-danger {
+        background: rgba(239, 68, 68, 0.2);
+        color: var(--danger-light);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .alert-success {
+        background: rgba(16, 185, 129, 0.2);
+        color: var(--secondary-light);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <div class="register-card">
+        <div class="register-header">
+            <h2><i class="fas fa-user-plus"></i> Create Account</h2>
+            <p>Start your poker journey with PokerGPT</p>
+        </div>
+        <div class="register-body">
+            <div id="registerAlert" class="alert" role="alert"></div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="username" class="form-label">
+                        <i class="fas fa-user"></i> Username
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-at"></i></span>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i> Email
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="password-requirements">
+                        <span>Password requirements:</span>
+                        <ul>
+                            <li id="length-check"><i class="fas fa-circle"></i> At least 8 characters</li>
+                            <li id="letter-check"><i class="fas fa-circle"></i> Contains letters</li>
+                            <li id="number-check"><i class="fas fa-circle"></i> Contains numbers</li>
+                        </ul>
+                    </div>
+                </div>
+                <button type="submit" class="register-btn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+                <div class="login-link">
+                    Already have an account?
+                    <a href="{{ url_for('login') }}">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const registerForm = document.getElementById('registerForm');
+    const registerAlert = document.getElementById('registerAlert');
+    const passwordInput = document.getElementById('password');
+    const lengthCheck = document.getElementById('length-check');
+    const letterCheck = document.getElementById('letter-check');
+    const numberCheck = document.getElementById('number-check');
+
+    function showAlert(message, type = 'danger') {
+        registerAlert.textContent = message;
+        registerAlert.className = `alert alert-${type}`;
+        registerAlert.style.display = 'block';
+        setTimeout(() => {
+            registerAlert.style.display = 'none';
+        }, 5000);
+    }
+
+    function validatePassword(password) {
+        const hasLength = password.length >= 8;
+        const hasLetter = /[a-zA-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+
+        lengthCheck.className = hasLength ? 'valid' : '';
+        letterCheck.className = hasLetter ? 'valid' : '';
+        numberCheck.className = hasNumber ? 'valid' : '';
+
+        return hasLength && hasLetter && hasNumber;
+    }
+
+    passwordInput.addEventListener('input', () => {
+        validatePassword(passwordInput.value);
+    });
+
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = passwordInput.value;
+        
+        if (!validatePassword(password)) {
+            showAlert('Please meet all password requirements');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, email, password }),
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                showAlert('Registration successful! Redirecting to login...', 'success');
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 2000);
+            } else {
+                showAlert(data.error || 'Registration failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showAlert('An error occurred during registration');
+        }
+    });
+</script>
+{% endblock %} 

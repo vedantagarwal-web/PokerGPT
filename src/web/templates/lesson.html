@@ -1,0 +1,802 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lesson.title }} - PokerGPT{% endblock %}
+
+{% block content %}
+<style>
+    .lesson-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .lesson-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+    }
+
+    .nav-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.6rem 1.2rem;
+        background: rgba(30, 41, 59, 0.8);
+        color: #FFF;
+        text-decoration: none;
+        border-radius: 0.5rem;
+        transition: background 0.3s;
+        font-weight: 500;
+    }
+
+    .nav-button:hover {
+        background: rgba(30, 41, 59, 1);
+    }
+
+    .nav-button i {
+        margin-right: 0.5rem;
+    }
+
+    .next-button i {
+        margin-right: 0;
+        margin-left: 0.5rem;
+    }
+
+    .lesson-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .path-name {
+        color: #94A3B8;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .lesson-title {
+        color: #FFC107;
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .lesson-description {
+        color: #CBD5E1;
+        font-size: 1.1rem;
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .lesson-content {
+        background: rgba(30, 41, 59, 0.8);
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .lesson-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .lesson-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-title {
+        color: #F8FAFC;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .section-content {
+        color: #CBD5E1;
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+
+    .section-content p {
+        margin-bottom: 1rem;
+    }
+
+    .section-content ul, .section-content ol {
+        margin-bottom: 1rem;
+        padding-left: 1.5rem;
+    }
+
+    .section-content li {
+        margin-bottom: 0.5rem;
+    }
+
+    .section-content strong {
+        color: #F8FAFC;
+    }
+
+    .highlight-box {
+        background: rgba(33, 150, 243, 0.1);
+        border-left: 4px solid #2196F3;
+        padding: 1rem;
+        margin: 1.5rem 0;
+        border-radius: 0.25rem;
+    }
+
+    .highlight-box.tip {
+        background: rgba(76, 175, 80, 0.1);
+        border-left-color: #4CAF50;
+    }
+
+    .highlight-box.warning {
+        background: rgba(255, 193, 7, 0.1);
+        border-left-color: #FFC107;
+    }
+
+    .highlight-box.important {
+        background: rgba(233, 30, 99, 0.1);
+        border-left-color: #E91E63;
+    }
+
+    .highlight-title {
+        font-weight: 600;
+        color: #F8FAFC;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .highlight-title i {
+        margin-right: 0.5rem;
+    }
+
+    .example-box {
+        background: rgba(15, 23, 42, 1);
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .example-title {
+        font-weight: 600;
+        color: #F8FAFC;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .example-scenario {
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    .example-analysis {
+        color: #94A3B8;
+    }
+
+    .example-analysis strong {
+        color: #FFC107;
+    }
+
+    .practice-section {
+        margin-top: 3rem;
+    }
+
+    .practice-title {
+        color: #F8FAFC;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .quiz-container {
+        background: rgba(30, 41, 59, 0.8);
+        border-radius: 1rem;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .quiz-question {
+        margin-bottom: 2rem;
+    }
+
+    .question-text {
+        color: #F8FAFC;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+
+    .quiz-options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .quiz-option {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+    }
+
+    .quiz-option:hover {
+        background: rgba(30, 41, 59, 1);
+    }
+
+    .quiz-option.selected {
+        background: rgba(33, 150, 243, 0.2);
+        border-color: #2196F3;
+    }
+
+    .quiz-option.correct {
+        background: rgba(76, 175, 80, 0.2);
+        border-color: #4CAF50;
+    }
+
+    .quiz-option.incorrect {
+        background: rgba(233, 30, 99, 0.2);
+        border-color: #E91E63;
+    }
+
+    .option-marker {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .quiz-option.selected .option-marker,
+    .quiz-option.correct .option-marker,
+    .quiz-option.incorrect .option-marker {
+        color: white;
+    }
+
+    .quiz-option.selected .option-marker {
+        background: #2196F3;
+    }
+
+    .quiz-option.correct .option-marker {
+        background: #4CAF50;
+    }
+
+    .quiz-option.incorrect .option-marker {
+        background: #E91E63;
+    }
+
+    .option-text {
+        color: #CBD5E1;
+    }
+
+    .quiz-explanation {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background: rgba(15, 23, 42, 0.8);
+        color: #94A3B8;
+        display: none;
+    }
+
+    .quiz-explanation.visible {
+        display: block;
+    }
+
+    .quiz-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+    }
+
+    .quiz-button {
+        padding: 0.8rem 1.5rem;
+        border-radius: 0.5rem;
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .check-answer {
+        background: #2196F3;
+        color: white;
+    }
+
+    .check-answer:hover {
+        background: #1976D2;
+    }
+
+    .next-question {
+        background: #4CAF50;
+        color: white;
+        display: none;
+    }
+
+    .next-question.visible {
+        display: block;
+    }
+
+    .next-question:hover {
+        background: #388E3C;
+    }
+
+    .reset-quiz {
+        background: rgba(233, 30, 99, 0.8);
+        color: white;
+    }
+
+    .reset-quiz:hover {
+        background: rgba(233, 30, 99, 1);
+    }
+
+    .progress-indicator {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+    }
+
+    .progress-text {
+        color: #94A3B8;
+        font-size: 0.9rem;
+    }
+
+    .progress-bar-container {
+        height: 6px;
+        background: rgba(15, 23, 42, 0.6);
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: #4CAF50;
+        width: 0%;
+        transition: width 0.3s ease;
+    }
+
+    .completion-message {
+        background: rgba(76, 175, 80, 0.1);
+        border-left: 4px solid #4CAF50;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border-radius: 0.25rem;
+        display: none;
+    }
+
+    .completion-message.visible {
+        display: block;
+    }
+
+    .completion-title {
+        color: #4CAF50;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .completion-title i {
+        margin-right: 0.5rem;
+    }
+
+    .completion-text {
+        color: #CBD5E1;
+    }
+
+    .lesson-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 3rem;
+    }
+
+    .practice-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.8rem 1.5rem;
+        background: #E91E63;
+        color: white;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.3s;
+    }
+
+    .practice-button:hover {
+        background: #C2185B;
+    }
+
+    .practice-button i {
+        margin-right: 0.5rem;
+    }
+
+    .complete-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.8rem 1.5rem;
+        background: #4CAF50;
+        color: white;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.3s;
+    }
+
+    .complete-button:hover {
+        background: #388E3C;
+    }
+
+    .complete-button i {
+        margin-right: 0.5rem;
+    }
+
+    .trainer-section {
+        margin-top: 3rem;
+    }
+
+    .trainer-container {
+        background: rgba(30, 41, 59, 0.8);
+        border-radius: 1rem;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .trainer-title {
+        color: #F8FAFC;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .trainer-description {
+        color: #94A3B8;
+        margin-bottom: 2rem;
+        text-align: center;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .poker-table {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/9;
+        background: #2c8a2c;
+        border-radius: 100px;
+        border: 15px solid #8b4513;
+        margin-bottom: 2rem;
+    }
+
+    .trainer-controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .trainer-button {
+        padding: 0.8rem 1.5rem;
+        border-radius: 0.5rem;
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .train-button {
+        background: #2196F3;
+        color: white;
+    }
+
+    .train-button:hover {
+        background: #1976D2;
+    }
+</style>
+
+<div class="lesson-container">
+    <div class="lesson-navigation">
+        <a href="/learn/{{ path_id }}" class="nav-button">
+            <i class="fas fa-arrow-left"></i> Back to Learning Path
+        </a>
+        {% if index < path.lessons|length - 1 %}
+        <a href="/lesson?path={{ path_id }}&lesson={{ path.lessons[index + 1].title|lower|replace(' ', '_') }}" class="nav-button next-button">
+            Next Lesson <i class="fas fa-arrow-right"></i>
+        </a>
+        {% endif %}
+    </div>
+
+    <div class="lesson-header">
+        <div class="path-name">{{ path.name }}</div>
+        <h1 class="lesson-title">{{ lesson.title }}</h1>
+        <p class="lesson-description">{{ lesson.description|default('Master this fundamental poker concept to improve your decision-making and overall strategy.') }}</p>
+    </div>
+
+    <div class="lesson-content">
+        <!-- Introduction Section -->
+        <div class="lesson-section">
+            <h2 class="section-title">Introduction</h2>
+            <div class="section-content">
+                <p>{{ lesson.introduction|default('This lesson covers one of the most important concepts in poker strategy. Understanding this concept will significantly improve your decision-making process and help you develop a winning approach to the game.') }}</p>
+                
+                <div class="highlight-box important">
+                    <div class="highlight-title">
+                        <i class="fas fa-exclamation-circle"></i> Why This Matters
+                    </div>
+                    <p>{{ lesson.importance|default('Mastering this concept is crucial for consistent profitability in poker. It forms the foundation for many advanced strategies and helps you make mathematically correct decisions in various situations.') }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content Sections -->
+        {% for section in lesson.sections|default([
+            {'title': 'What is ' + lesson.title + '?', 'content': 'Detailed explanation of the concept.'},
+            {'title': 'Key Principles', 'content': 'The fundamental principles behind this concept.'},
+            {'title': 'Common Mistakes', 'content': 'Mistakes players often make when applying this concept.'},
+            {'title': 'Advanced Applications', 'content': 'How to apply this concept in complex situations.'}
+        ]) %}
+        <div class="lesson-section">
+            <h2 class="section-title">{{ section.title }}</h2>
+            <div class="section-content">
+                <p>{{ section.content }}</p>
+                
+                {% if loop.index == 1 %}
+                <div class="highlight-box tip">
+                    <div class="highlight-title">
+                        <i class="fas fa-lightbulb"></i> Pro Tip
+                    </div>
+                    <p>Always consider how this concept interacts with other aspects of your poker strategy. The best players understand the relationships between different concepts and how they influence each other.</p>
+                </div>
+                {% endif %}
+                
+                {% if loop.index == 2 %}
+                <div class="example-box">
+                    <h3 class="example-title">Practical Example</h3>
+                    <div class="example-scenario">
+                        <p>You hold A♥K♠ in the cutoff position at a 9-handed table. Everyone folds to you.</p>
+                    </div>
+                    <div class="example-analysis">
+                        <p>This is a <strong>premium hand</strong> in a <strong>late position</strong>, which makes it a clear raising opportunity. You should raise to 2.5-3BB to build the pot with your strong hand while also giving yourself the chance to win the blinds uncontested.</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Practice Quiz Section -->
+    <div class="practice-section">
+        <h2 class="practice-title">Test Your Understanding</h2>
+        
+        <div class="quiz-container">
+            <div class="progress-indicator">
+                <div class="progress-text">Question <span id="current-question">1</span> of <span id="total-questions">5</span></div>
+                <div class="progress-text"><span id="correct-answers">0</span> correct</div>
+            </div>
+            
+            <div class="progress-bar-container">
+                <div class="progress-bar" style="width: 0%"></div>
+            </div>
+            
+            <div id="quiz-questions">
+                <!-- Quiz questions will be dynamically loaded -->
+                {% for question in lesson.quiz_questions|default([
+                    {
+                        'question': 'Which position at the poker table has the most significant advantage?',
+                        'options': ['UTG', 'MP', 'CO', 'BTN', 'BB'],
+                        'answer': 'BTN',
+                        'explanation': 'The button (BTN) has the most significant advantage because it acts last on all post-flop streets, giving the player maximum information before making decisions.'
+                    },
+                    {
+                        'question': 'What are pot odds?',
+                        'options': [
+                            'The odds of making your hand by the river',
+                            'The relationship between the pot size and the cost of a call',
+                            'The percentage of pots you win at showdown',
+                            'The ratio of big blinds to your stack size',
+                            'The probability of being dealt a premium hand'
+                        ],
+                        'answer': 'The relationship between the pot size and the cost of a call',
+                        'explanation': 'Pot odds refer to the relationship between the current pot size and the cost of a contemplated call. They help determine if a call is mathematically profitable based on your equity in the hand.'
+                    }
+                ]) %}
+                <div class="quiz-question" {% if not loop.first %}style="display:none"{% endif %} data-question-index="{{ loop.index0 }}">
+                    <div class="question-text">{{ question.question }}</div>
+                    <div class="quiz-options">
+                        {% for option in question.options %}
+                        <div class="quiz-option" data-option-index="{{ loop.index0 }}">
+                            <div class="option-marker">{{ loop.index }}</div>
+                            <div class="option-text">{{ option }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="quiz-explanation">{{ question.explanation }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="quiz-actions">
+                <button class="quiz-button check-answer" id="check-answer">Check Answer</button>
+                <button class="quiz-button next-question" id="next-question">Next Question</button>
+                <button class="quiz-button reset-quiz" id="reset-quiz">Reset Quiz</button>
+            </div>
+            
+            <div class="completion-message">
+                <div class="completion-title">
+                    <i class="fas fa-trophy"></i> Quiz Completed!
+                </div>
+                <p class="completion-text">Great job! You've completed the quiz and demonstrated your understanding of this concept. Continue to the next lesson or try the practice exercises to further reinforce your knowledge.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Optional: Interactive Trainer Section -->
+    <div class="trainer-section">
+        <h2 class="practice-title">Practice Exercises</h2>
+        
+        <div class="trainer-container">
+            <h3 class="trainer-title">Interactive Poker Trainer</h3>
+            <p class="trainer-description">Apply what you've learned in a controlled environment. This trainer will present you with various poker scenarios where you can practice making decisions based on the concepts covered in this lesson.</p>
+            
+            <div class="trainer-controls">
+                <a href="/practice" class="practice-button">
+                    <i class="fas fa-gamepad"></i> Go to Practice Tool
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="lesson-footer">
+        <a href="/practice" class="practice-button">
+            <i class="fas fa-gamepad"></i> Practice Tool
+        </a>
+        
+        <button class="complete-button" id="complete-lesson">
+            <i class="fas fa-check-circle"></i> Mark as Complete
+        </button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Quiz functionality
+        const quizQuestions = document.querySelectorAll('.quiz-question');
+        const checkAnswerBtn = document.getElementById('check-answer');
+        const nextQuestionBtn = document.getElementById('next-question');
+        const resetQuizBtn = document.getElementById('reset-quiz');
+        const progressBar = document.querySelector('.progress-bar');
+        const currentQuestionSpan = document.getElementById('current-question');
+        const totalQuestionsSpan = document.getElementById('total-questions');
+        const correctAnswersSpan = document.getElementById('correct-answers');
+        const completionMessage = document.querySelector('.completion-message');
+        
+        let currentQuestionIndex = 0;
+        let selectedOptionIndex = null;
+        let correctAnswers = 0;
+        const totalQuestions = quizQuestions.length;
+        
+        totalQuestionsSpan.textContent = totalQuestions;
+        
+        // Set up option selection
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const questionDiv = this.closest('.quiz-question');
+                questionDiv.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                selectedOptionIndex = parseInt(this.getAttribute('data-option-index'));
+            });
+        });
+        
+        // Check answer button
+        checkAnswerBtn.addEventListener('click', function() {
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            const options = currentQuestion.querySelectorAll('.quiz-option');
+            const explanation = currentQuestion.querySelector('.quiz-explanation');
+            
+            if (selectedOptionIndex === null) {
+                alert('Please select an answer');
+                return;
+            }
+            
+            // Define the correct answer (in a real implementation, this would come from the server)
+            const correctIndex = 0; // For demonstration, we'll say the first option is always correct
+            
+            options.forEach((option, index) => {
+                if (index === correctIndex) {
+                    option.classList.add('correct');
+                } else if (index === selectedOptionIndex) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // Show explanation
+            explanation.classList.add('visible');
+            
+            // Show next question button
+            checkAnswerBtn.style.display = 'none';
+            nextQuestionBtn.classList.add('visible');
+            
+            // Update correct answers
+            if (selectedOptionIndex === correctIndex) {
+                correctAnswers++;
+                correctAnswersSpan.textContent = correctAnswers;
+            }
+        });
+        
+        // Next question button
+        nextQuestionBtn.addEventListener('click', function() {
+            // Hide current question
+            quizQuestions[currentQuestionIndex].style.display = 'none';
+            
+            // Move to next question or finish quiz
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex < totalQuestions) {
+                // Show next question
+                quizQuestions[currentQuestionIndex].style.display = 'block';
+                currentQuestionSpan.textContent = currentQuestionIndex + 1;
+                
+                // Reset UI state
+                nextQuestionBtn.classList.remove('visible');
+                checkAnswerBtn.style.display = 'block';
+                selectedOptionIndex = null;
+                
+                // Update progress bar
+                progressBar.style.width = `${(currentQuestionIndex / totalQuestions) * 100}%`;
+            } else {
+                // Quiz completed
+                nextQuestionBtn.style.display = 'none';
+                completionMessage.classList.add('visible');
+                
+                // Update progress bar to 100%
+                progressBar.style.width = '100%';
+            }
+        });
+        
+        // Reset quiz button
+        resetQuizBtn.addEventListener('click', function() {
+            // Reset all states
+            currentQuestionIndex = 0;
+            selectedOptionIndex = null;
+            correctAnswers = 0;
+            correctAnswersSpan.textContent = '0';
+            currentQuestionSpan.textContent = '1';
+            progressBar.style.width = '0%';
+            
+            // Hide all questions except the first
+            quizQuestions.forEach((question, index) => {
+                question.style.display = index === 0 ? 'block' : 'none';
+                
+                // Reset options
+                question.querySelectorAll('.quiz-option').forEach(option => {
+                    option.classList.remove('selected', 'correct', 'incorrect');
+                });
+                
+                // Hide explanations
+                question.querySelector('.quiz-explanation').classList.remove('visible');
+            });
+            
+            // Reset buttons
+            nextQuestionBtn.classList.remove('visible');
+            checkAnswerBtn.style.display = 'block';
+            
+            // Hide completion message
+            completionMessage.classList.remove('visible');
+        });
+        
+        // Mark as complete button
+        document.getElementById('complete-lesson').addEventListener('click', function() {
+            alert('Lesson marked as complete! This would update your progress in a real implementation.');
+        });
+    });
+</script>
+{% endblock %} 

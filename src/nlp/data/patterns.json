@@ -1,0 +1,23 @@
+{
+    "card_pattern": "(?P<rank>[2-9TJQKA])(?P<suit>[hdcs])",
+    "hand_pattern": "(?P<card1>[2-9TJQKA][hdcs])\\s*(?P<card2>[2-9TJQKA][hdcs])",
+    "board_pattern": "(?i)flop:\\s*(?P<flop1>[2-9TJQKA][hdcs])\\s*(?P<flop2>[2-9TJQKA][hdcs])\\s*(?P<flop3>[2-9TJQKA][hdcs])",
+    "stack_pattern": "(?i)(?P<size>\\d+)\\s*(?:bb|big\\s*blinds?)",
+    "bet_pattern": "(?i)(?P<action>fold|call|check|bet|raise|all\\s*in)\\s*(?P<size>\\d+)?",
+    "position_pattern": "(?i)(?P<position>utg|early|mp|middle|co|cutoff|btn|button|sb|small|bb|big)",
+    "hand_type_pattern": "(?i)(?P<type>high\\s*card|pair|two\\s*pair|three\\s*of\\s*a\\s*kind|straight|flush|full\\s*house|four\\s*of\\s*a\\s*kind|straight\\s*flush|royal\\s*flush)",
+    "board_texture_pattern": "(?i)(?P<texture>monotone|paired|connected|disconnected|rainbow|dry|wet)",
+    "stack_size_pattern": "(?i)(?P<size>short|medium|deep|shallow|standard)",
+    "action_sequence_pattern": "(?i)(?P<player>\\w+)\\s+(?P<action>fold|call|check|bet|raise|all\\s*in)\\s*(?P<size>\\d+)?",
+    "pot_size_pattern": "(?i)pot:\\s*(?P<size>\\d+)\\s*(?:bb|big\\s*blinds?)",
+    "opponent_range_pattern": "(?P<range>\\w+)\\s*(?P<frequency>\\d+)?%?\\s*(?P<type>range|hand)",
+    "tournament_info_pattern": "(?P<stage>early|middle|late|bubble|final table)\\s*(?P<stack>\\d+)\\s*(?P<unit>BB|bb|big blinds?)",
+    "blinds_pattern": "(?i)(?P<small>\\d+)/(?P<big>\\d+)\\s*(?:bb|big\\s*blinds?)",
+    "time_pattern": "(?P<time>\\d+)\\s*(?P<unit>minutes?|hours?|days?)",
+    "player_count_pattern": "(?i)(?P<count>\\d+)\\s*(?:players?|handed)",
+    "hand_history_pattern": "(?P<preflop>.*?)\\s*(?P<flop>\\[.*?\\])?\\s*(?P<turn>\\[.*?\\])?\\s*(?P<river>\\[.*?\\])?",
+    "concept_reference_pattern": "(?P<concept>\\w+)\\s*(?P<context>in|for|about|regarding)\\s*(?P<topic>\\w+)",
+    "question_pattern": "(?P<question>what|how|why|when|where|which)\\s*(?P<subject>.*?)\\?",
+    "explanation_request_pattern": "(?P<request>explain|describe|tell me about|what is|how does)\\s*(?P<topic>.*?)\\?",
+    "comparison_pattern": "(?P<item1>\\w+)\\s*(?P<comparison>vs|versus|compared to)\\s*(?P<item2>\\w+)"
+} 

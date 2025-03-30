@@ -1,0 +1,667 @@
+/* Practice Page Styles */
+:root {
+    --primary-color: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #60a5fa;
+    --secondary-color: #10b981;
+    --secondary-dark: #059669;
+    --secondary-light: #34d399;
+    --accent-color: #f59e0b;
+    --accent-dark: #d97706;
+    --accent-light: #fbbf24;
+    --danger-color: #ef4444;
+    --danger-dark: #dc2626;
+    --danger-light: #f87171;
+    --background-color: #0f172a;
+    --surface-color: #1e293b;
+    --text-color: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: #334155;
+}
+
+.practice-container {
+    background-color: var(--background-color);
+    min-height: 100vh;
+    padding: 2rem;
+    color: var(--text-color);
+}
+
+/* Poker Table Section */
+.poker-table-section {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.poker-table {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-bottom: 2rem;
+    position: relative;
+    min-height: 400px;
+}
+
+/* Community Cards */
+.community-cards {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 0.75rem;
+    z-index: 2;
+}
+
+/* Pot Display */
+.pot-display {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    color: white;
+    font-size: 1.4rem;
+    font-weight: bold;
+    z-index: 2;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--accent-color);
+}
+
+.pot-label {
+    margin-right: 0.75rem;
+    color: var(--accent-color);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Player Positions */
+.player-positions {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.player-position {
+    position: absolute;
+    padding: 1rem;
+    background: var(--surface-color);
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.player-position.bot-1 {
+    top: 2rem;
+    left: 2rem;
+}
+
+.player-position.bot-2 {
+    top: 2rem;
+    right: 2rem;
+}
+
+.player-position.user {
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.player-info {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 0.75rem 1.5rem;
+    border-radius: 20px;
+    margin-bottom: 0.75rem;
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--accent-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.player-name {
+    font-weight: bold;
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.player-stack {
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.player-cards {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+/* Cards */
+.card {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    margin: 0.25rem;
+    font-weight: bold;
+    font-size: 1.25rem;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.card.red {
+    color: var(--danger-color);
+}
+
+.card.black {
+    color: var(--text-color);
+}
+
+/* Game Controls */
+.game-controls {
+    background: var(--surface-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.action-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.action-btn i {
+    font-size: 1.1em;
+}
+
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.action-btn.fold {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.action-btn.fold:hover:not(:disabled) {
+    background-color: var(--danger-dark);
+}
+
+.action-btn.check {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.action-btn.check:hover:not(:disabled) {
+    background-color: var(--secondary-dark);
+}
+
+.action-btn.call {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.action-btn.call:hover:not(:disabled) {
+    background-color: var(--primary-dark);
+}
+
+.action-btn.raise {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.action-btn.raise:hover:not(:disabled) {
+    background-color: var(--accent-dark);
+}
+
+/* Betting Controls */
+.betting-controls {
+    background: var(--surface-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+}
+
+.current-bet {
+    margin-bottom: 1.5rem;
+    color: white;
+    font-size: 1.2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.bet-label {
+    color: var(--accent-color);
+    margin-right: 0.75rem;
+    font-weight: bold;
+}
+
+.bet-slider {
+    width: 100%;
+    margin: 1rem 0;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--border-color);
+    outline: none;
+}
+
+.bet-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.bet-slider::-webkit-slider-thumb:hover {
+    background: var(--accent-dark);
+}
+
+.bet-amount-display {
+    position: absolute;
+    top: -30px;
+    right: 0;
+    color: var(--accent-color);
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    border: 2px solid var(--accent-color);
+}
+
+/* Game Info */
+.game-info {
+    background: var(--surface-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.info-item {
+    text-align: center;
+}
+
+.info-label {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.info-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.new-hand-btn {
+    width: 100%;
+    background: linear-gradient(45deg, var(--primary-color), #3498db);
+    border: none;
+    padding: 1rem;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.new-hand-btn:hover {
+    background: linear-gradient(45deg, #3498db, var(--primary-color));
+    transform: translateY(-3px);
+}
+
+/* Right Column Cards */
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid var(--accent-color);
+    backdrop-filter: blur(10px);
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.card-title {
+    color: var(--accent-color);
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.card-text {
+    color: white;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* GTO Advice Styling */
+.actions-list {
+    margin-top: 1rem;
+}
+
+.action-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+}
+
+.action-name {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.action-size {
+    color: var(--secondary-color);
+}
+
+.action-freq {
+    color: var(--text-muted);
+    font-weight: bold;
+}
+
+/* Chat Interface */
+.chat-interface {
+    background: var(--surface-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    padding-right: 0.5rem;
+}
+
+.chat-message {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    max-width: 80%;
+}
+
+.player-message {
+    background: var(--primary-color);
+    margin-left: auto;
+}
+
+.ai-message {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+}
+
+.system-message {
+    background: var(--accent-color);
+    color: white;
+    text-align: center;
+    max-width: 100%;
+    margin: 1rem 0;
+}
+
+.message-sender {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.chat-input-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.chat-input {
+    flex-grow: 1;
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    outline: none;
+}
+
+.chat-input:focus {
+    border-color: var(--primary-color);
+}
+
+.chat-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.send-message-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.send-message-btn:hover {
+    background: var(--primary-dark);
+}
+
+/* Statistics */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Hand History */
+.hand-history {
+    background: var(--surface-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.hand-history h5 {
+    color: var(--accent-color);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hand-history-list {
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.hand-history-item {
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid var(--text-muted);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.hand-history-item:hover {
+    transform: translateX(10px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.hand-history-item.won {
+    border-left-color: var(--secondary-color);
+    background: rgba(46, 204, 113, 0.15);
+}
+
+.hand-history-item.lost {
+    border-left-color: var(--danger-color);
+    background: rgba(231, 76, 60, 0.15);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-message {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+/* Loading indicator */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--text-muted);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .poker-table {
+        padding-top: 120%;
+    }
+
+    .action-buttons {
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        flex: 1 1 calc(50% - 0.5rem);
+    }
+
+    .game-info {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .new-hand-btn {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .practice-container {
+        padding: 1rem;
+    }
+
+    .poker-table {
+        padding-top: 150%;
+    }
+
+    .card {
+        width: 60px;
+        height: 85px;
+        font-size: 1.4rem;
+    }
+
+    .action-btn {
+        flex: 1 1 100%;
+        font-size: 1rem;
+        padding: 0.75rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chat-interface {
+        height: 300px;
+    }
+
+    .game-info {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .new-hand-btn {
+        grid-column: auto;
+    }
+
+    .history-item {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .chat-message {
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .action-btn {
+        flex: 1 1 100%;
+    }
+
+    .game-info {
+        grid-template-columns: 1fr;
+    }
+
+    .chat-message {
+        max-width: 100%;
+    }
+} 

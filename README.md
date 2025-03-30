@@ -1,0 +1,110 @@
+# PokerGPT
+
+PokerGPT is an AI-powered poker learning system that helps players improve their game through personalized learning paths, hand analysis, and spaced repetition practice.
+
+## Features
+
+- **Hand Analysis**: Get GTO (Game Theory Optimal) recommendations for any poker situation
+- **Equity Calculator**: Calculate hand equity against opponent ranges
+- **Learning System**: Structured learning paths with concepts and examples
+- **Spaced Repetition**: Practice concepts at optimal intervals
+- **Progress Tracking**: Monitor your learning progress and achievements
+- **Personalized Experience**: Adaptive learning based on your skill level and preferences
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/pokergpt.git
+cd pokergpt
+```
+
+2. Create a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+4. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+## Usage
+
+1. Start the development server:
+```bash
+python -m src.web.app
+```
+
+2. Open your browser and navigate to `http://localhost:5000`
+
+## Project Structure
+
+```
+pokergpt/
+├── data/                  # Data files (knowledge base, solutions, etc.)
+├── src/
+│   ├── core/             # Core poker logic
+│   │   ├── equity_calculator.py
+│   │   └── gto_solver.py
+│   ├── knowledge/        # Knowledge base management
+│   │   └── poker_knowledge.py
+│   ├── nlp/             # Natural language processing
+│   │   └── poker_nlp.py
+│   ├── personalization/ # User profiles and learning
+│   │   ├── user_profile.py
+│   │   └── spaced_repetition.py
+│   └── web/             # Web application
+│       ├── app.py
+│       └── templates/   # HTML templates
+├── tests/               # Test suite
+├── requirements.txt     # Python dependencies
+└── README.md           # Project documentation
+```
+
+## Development
+
+1. Install development dependencies:
+```bash
+pip install -r requirements-dev.txt
+```
+
+2. Run tests:
+```bash
+pytest
+```
+
+3. Format code:
+```bash
+black src tests
+```
+
+4. Type checking:
+```bash
+mypy src
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Thanks to the poker community for their insights and feedback
+- Built with Flask and other open-source tools
+- Inspired by modern learning science and spaced repetition systems 

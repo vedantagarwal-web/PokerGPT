@@ -1,0 +1,47 @@
+{
+    "users": {
+        "vedantagarwal453": {
+            "username": "vedantagarwal453",
+            "email": "vedantagarwal453@gmail.com",
+            "password_hash": "scrypt:32768:8:1$t09EKCtBA6q5UUGI$2caff6ee96507f21e4f785935e7dad91955b4eeefddce3a9c23d6ec3f9b22e349f5b72cfa20a1eb8337ee91f7a5d96087692e29762050ad30d00125f33178c7f",
+            "level": "beginner",
+            "learning_paths": [
+                {
+                    "concept_id": "positions",
+                    "path_id": "preflop",
+                    "completed": true,
+                    "score": 100.0,
+                    "answers": [
+                        "Button",
+                        "All of the above"
+                    ],
+                    "timestamp": "2025-03-30T01:18:43.820095"
+                },
+                {
+                    "concept_id": "betting",
+                    "path_id": "postflop",
+                    "completed": true,
+                    "score": 100.0,
+                    "answers": [
+                        "For thin value bets"
+                    ],
+                    "timestamp": "2025-03-30T01:19:10.894972"
+                },
+                {
+                    "concept_id": "ranges",
+                    "path_id": "gto",
+                    "completed": true,
+                    "score": 100.0,
+                    "answers": [
+                        "Strong hands and bluffs"
+                    ],
+                    "timestamp": "2025-03-30T01:19:21.393255"
+                }
+            ],
+            "achievements": [],
+            "last_study_date": "2025-03-30T01:19:21.393280",
+            "study_streak": 1,
+            "total_study_time": 30
+        }
+    }
+}

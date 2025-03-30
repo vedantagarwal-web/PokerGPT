@@ -1,0 +1,520 @@
+{% extends "base.html" %}
+
+{% block title %}Learn Poker - PokerGPT{% endblock %}
+
+{% block content %}
+<style>
+    .learn-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .learn-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .learn-header h1 {
+        color: #FFC107;
+        margin-bottom: 0.5rem;
+    }
+
+    .learn-header p {
+        color: #94A3B8;
+        font-size: 1.1rem;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .error-message {
+        background: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .skill-level-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .skill-tab {
+        padding: 1rem 2rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-weight: 500;
+    }
+
+    .skill-tab.active {
+        background: #FFC107;
+        color: #1a1a1a;
+    }
+
+    .learning-paths {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+
+    .path-card {
+        background: rgba(30, 41, 59, 0.8);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .path-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .path-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .path-icon {
+        width: 40px;
+        height: 40px;
+        background: #FFC107;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #1a1a1a;
+        font-size: 1.2rem;
+    }
+
+    .path-title {
+        color: #F8FAFC;
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    .path-description {
+        color: #94A3B8;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .path-details {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .path-concepts {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1rem 0;
+    }
+
+    .path-concept {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        color: #CBD5E1;
+        font-size: 0.9rem;
+    }
+
+    .path-concept:before {
+        content: "•";
+        margin-right: 0.5rem;
+        color: #FFC107;
+    }
+
+    .path-stats {
+        display: flex;
+        justify-content: space-between;
+        color: #94A3B8;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .start-button {
+        width: 100%;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        background: #2196F3;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    .start-button:hover {
+        background: #1976D2;
+    }
+
+    .concepts-section {
+        margin-top: 5rem;
+    }
+
+    .concepts-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .concepts-header h2 {
+        color: #FFC107;
+        margin-bottom: 0.5rem;
+    }
+
+    .concepts-header p {
+        color: #94A3B8;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .concepts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+
+    .concept-card {
+        background: rgba(30, 41, 59, 0.8);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .concept-name {
+        color: #F8FAFC;
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .concept-difficulty {
+        background: rgba(33, 150, 243, 0.2);
+        color: #2196F3;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.8rem;
+        margin-left: auto;
+    }
+
+    .concept-difficulty.beginner {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4CAF50;
+    }
+
+    .concept-difficulty.intermediate {
+        background: rgba(33, 150, 243, 0.2);
+        color: #2196F3;
+    }
+
+    .concept-difficulty.advanced {
+        background: rgba(233, 30, 99, 0.2);
+        color: #E91E63;
+    }
+
+    .concept-explanation {
+        color: #CBD5E1;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        flex-grow: 1;
+    }
+
+    .concept-learn-more {
+        color: #FFC107;
+        text-decoration: none;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        margin-top: auto;
+    }
+
+    .ai-coach-section {
+        margin-top: 5rem;
+        padding: 2rem;
+        background: rgba(30, 41, 59, 0.8);
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .ai-coach-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .coach-icon {
+        width: 48px;
+        height: 48px;
+        background: #E91E63;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .ai-coach-header h3 {
+        color: #F8FAFC;
+        margin: 0;
+    }
+
+    .coach-description {
+        color: #94A3B8;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .coach-interaction {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .coach-interaction textarea {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background: rgba(22, 30, 43, 1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .coach-interaction button {
+        align-self: flex-end;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        background: #FFC107;
+        color: #1a1a1a;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        font-weight: 500;
+    }
+
+    .coach-interaction button:hover {
+        background: #FFA000;
+    }
+
+    .coach-response {
+        background: rgba(22, 30, 43, 1);
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        color: #CBD5E1;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        min-height: 100px;
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="learn-container">
+    {% if error %}
+    <div class="error-message">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <div class="learn-header">
+        <h1>Master Poker Strategy</h1>
+        <p>Comprehensive learning paths tailored to your skill level, with detailed explanations and practice exercises</p>
+    </div>
+
+    <div class="skill-level-tabs">
+        <div class="skill-tab active" data-level="beginner">Beginner</div>
+        <div class="skill-tab" data-level="intermediate">Intermediate</div>
+        <div class="skill-tab" data-level="advanced">Advanced</div>
+    </div>
+
+    <div class="learning-paths">
+        <!-- Beginner Paths -->
+        <div class="path-card" data-level="beginner">
+            <div class="path-header">
+                <div class="path-icon">
+                    <i class="fas fa-chess-board"></i>
+                </div>
+                <h3 class="path-title">Fundamentals of Poker</h3>
+            </div>
+            <p class="path-description">Master the essential concepts that form the foundation of profitable poker play. This path focuses on position, pot odds, and basic preflop strategy.</p>
+            <div class="path-details">
+                <ul class="path-concepts">
+                    <li class="path-concept">Position and its importance</li>
+                    <li class="path-concept">Pot odds and basic math</li>
+                    <li class="path-concept">Preflop hand selection</li>
+                    <li class="path-concept">Basic postflop strategy</li>
+                </ul>
+            </div>
+            <div class="path-stats">
+                <span>8 lessons</span>
+                <span>Beginner friendly</span>
+            </div>
+            <button class="start-button" data-path="fundamentals">Start Learning</button>
+        </div>
+
+        <!-- Intermediate Paths -->
+        <div class="path-card" data-level="intermediate">
+            <div class="path-header">
+                <div class="path-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="path-title">Advanced Strategies</h3>
+            </div>
+            <p class="path-description">Build on the fundamentals with more advanced concepts. Learn to read board textures, size bets optimally, and develop a deeper understanding of hand reading.</p>
+            <div class="path-details">
+                <ul class="path-concepts">
+                    <li class="path-concept">Board texture analysis</li>
+                    <li class="path-concept">Advanced bet sizing</li>
+                    <li class="path-concept">Hand reading techniques</li>
+                    <li class="path-concept">Multi-street planning</li>
+                </ul>
+            </div>
+            <div class="path-stats">
+                <span>10 lessons</span>
+                <span>Intermediate level</span>
+            </div>
+            <button class="start-button" data-path="advanced_strategy">Start Learning</button>
+        </div>
+
+        <!-- Advanced Paths -->
+        <div class="path-card" data-level="advanced">
+            <div class="path-header">
+                <div class="path-icon">
+                    <i class="fas fa-chart-network"></i>
+                </div>
+                <h3 class="path-title">GTO Poker Theory</h3>
+            </div>
+            <p class="path-description">Dive into Game Theory Optimal concepts and equilibrium strategies. Learn about balanced ranges, exploitation, and advanced mathematical concepts in poker.</p>
+            <div class="path-details">
+                <ul class="path-concepts">
+                    <li class="path-concept">GTO fundamentals</li>
+                    <li class="path-concept">Range construction</li>
+                    <li class="path-concept">Exploitative adjustments</li>
+                    <li class="path-concept">Advanced solvers usage</li>
+                </ul>
+            </div>
+            <div class="path-stats">
+                <span>12 lessons</span>
+                <span>Advanced concepts</span>
+            </div>
+            <button class="start-button" data-path="gto_theory">Start Learning</button>
+        </div>
+    </div>
+
+    <div class="concepts-section">
+        <div class="concepts-header">
+            <h2>Core Poker Concepts</h2>
+            <p>Understanding these fundamental concepts is essential for improving your poker game</p>
+        </div>
+
+        <div class="concepts-grid">
+            <div class="concept-card">
+                <div class="concept-name">
+                    Position
+                    <span class="concept-difficulty beginner">Beginner</span>
+                </div>
+                <p class="concept-explanation">
+                    Position refers to where you sit relative to the dealer button, which determines when you act during the hand. Acting later gives you an information advantage, allowing you to make better decisions than players who act before you.
+                </p>
+                <a href="/learn/concept/position" class="concept-learn-more">Learn more →</a>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-name">
+                    Pot Odds
+                    <span class="concept-difficulty beginner">Beginner</span>
+                </div>
+                <p class="concept-explanation">
+                    Pot odds are the ratio between the current pot size and the cost of your call. They help you determine if a call is mathematically profitable by comparing your equity in the hand to the percentage of the pot you need to contribute.
+                </p>
+                <a href="/learn/concept/pot_odds" class="concept-learn-more">Learn more →</a>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-name">
+                    Preflop Ranges
+                    <span class="concept-difficulty intermediate">Intermediate</span>
+                </div>
+                <p class="concept-explanation">
+                    Preflop ranges are collections of hands you would play in specific situations. They vary by position, with tighter ranges in early positions and wider ranges in late positions. Understanding optimal ranges is crucial for preflop decision-making.
+                </p>
+                <a href="/learn/concept/preflop_ranges" class="concept-learn-more">Learn more →</a>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-name">
+                    Board Texture
+                    <span class="concept-difficulty intermediate">Intermediate</span>
+                </div>
+                <p class="concept-explanation">
+                    Board texture refers to how the community cards interact with potential hand ranges. Wet boards have many straight and flush possibilities, while dry boards have few drawing possibilities. The texture affects optimal betting strategies.
+                </p>
+                <a href="/learn/concept/board_texture" class="concept-learn-more">Learn more →</a>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-name">
+                    Hand Reading
+                    <span class="concept-difficulty advanced">Advanced</span>
+                </div>
+                <p class="concept-explanation">
+                    Hand reading is the process of narrowing down your opponent's possible holdings based on their actions. It involves putting them on a preflop range, then narrowing that range as the hand progresses through each street.
+                </p>
+                <a href="/learn/concept/hand_reading" class="concept-learn-more">Learn more →</a>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-name">
+                    GTO Basics
+                    <span class="concept-difficulty advanced">Advanced</span>
+                </div>
+                <p class="concept-explanation">
+                    Game Theory Optimal (GTO) play aims to create a balanced strategy that can't be exploited, regardless of what your opponents do. It involves playing with the right frequency of value bets and bluffs to make opponents indifferent between options.
+                </p>
+                <a href="/learn/concept/gto_basics" class="concept-learn-more">Learn more →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="ai-coach-section">
+        <div class="ai-coach-header">
+            <div class="coach-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h3>AI Poker Coach</h3>
+        </div>
+        <p class="coach-description">Get personalized advice and answers to your poker questions from our AI coach. Ask about specific concepts, hand analysis, or strategy advice tailored to your skill level.</p>
+        <div class="coach-interaction">
+            <textarea id="coach-question" placeholder="Ask a question about poker strategy... (e.g., 'How should I adjust my strategy when playing against loose-aggressive players?')"></textarea>
+            <button onclick="getCoachAdvice()">Get Advice</button>
+        </div>
+        <div id="coach-response" class="coach-response">
+            Your coaching advice will appear here after you ask a question.
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/learn.js') }}"></script>
+{% endblock %} 

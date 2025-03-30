@@ -1,0 +1,64 @@
+{
+    "preflop_position": {
+        "id": "preflop_position",
+        "title": "Preflop Position",
+        "description": "Understanding the importance of position in preflop play",
+        "difficulty": "beginner",
+        "prerequisites": [],
+        "explanations": {
+            "beginner": "Position in poker refers to where you are seated relative to the dealer button. The later your position, the more information you have about other players' actions before making your decision.",
+            "intermediate": "Position is crucial in poker because it determines how much information you have when making decisions. Players in later positions can make more informed decisions based on the actions of players in earlier positions.",
+            "advanced": "Positional advantage in poker is a fundamental concept that affects hand selection, bet sizing, and overall strategy. Players in later positions can exploit their informational advantage through wider ranges and more aggressive play."
+        },
+        "examples": [
+            {
+                "hand": "As Kh",
+                "position": "BTN",
+                "action": "raise",
+                "explanation": "With a strong hand in the button position, raising is optimal as you have position on all players and can control the action."
+            }
+        ],
+        "related_concepts": ["range_construction", "betting_strategy"]
+    },
+    "range_construction": {
+        "id": "range_construction",
+        "title": "Range Construction",
+        "description": "Building balanced and profitable ranges",
+        "difficulty": "intermediate",
+        "prerequisites": ["preflop_position"],
+        "explanations": {
+            "beginner": "A range is the collection of hands you play in a specific situation. Building a balanced range means including a mix of strong and weak hands.",
+            "intermediate": "Range construction involves selecting hands based on position, stack depth, and opponent tendencies. A balanced range includes value hands, bluffs, and medium-strength hands.",
+            "advanced": "Advanced range construction considers game theory optimal (GTO) principles, including proper mixing of hands and frequency-based decision making."
+        },
+        "examples": [
+            {
+                "position": "BTN",
+                "range": "AA, KK, QQ, JJ, TT, 99, 88, AKs, AKo, AQs, AQo, AJs, AJo",
+                "explanation": "This is a balanced range for the button position, including strong value hands and some medium-strength hands."
+            }
+        ],
+        "related_concepts": ["game_theory", "betting_strategy"]
+    },
+    "game_theory": {
+        "id": "game_theory",
+        "title": "Game Theory Optimal (GTO)",
+        "description": "Understanding GTO principles in poker",
+        "difficulty": "advanced",
+        "prerequisites": ["range_construction", "betting_strategy"],
+        "explanations": {
+            "beginner": "GTO is a strategy that cannot be exploited by opponents. It involves making decisions that are mathematically optimal.",
+            "intermediate": "GTO strategy involves balanced ranges, proper bet sizing, and frequency-based decision making. It's designed to be unexploitable.",
+            "advanced": "Advanced GTO concepts include mixed strategies, optimal bet sizing, and range balancing across different board textures and positions."
+        },
+        "examples": [
+            {
+                "situation": "BTN vs BB",
+                "action": "3bet",
+                "frequency": "0.6",
+                "explanation": "A GTO 3betting frequency of 60% makes it difficult for the BB to exploit your strategy."
+            }
+        ],
+        "related_concepts": ["range_construction", "betting_strategy"]
+    }
+} 

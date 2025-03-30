@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - PokerGPT{% endblock %}
+
+{% block content %}
+<style>
+    .profile-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .profile-title {
+        color: #FFC107;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 2rem;
+        text-align: center;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 2rem;
+    }
+
+    .profile-section {
+        background: rgba(30, 41, 59, 0.8);
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .section-title {
+        color: #FFC107;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .user-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .info-item {
+        background: rgba(15, 23, 42, 0.6);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .info-label {
+        color: #94A3B8;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-value {
+        color: #F8FAFC;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .streak-display {
+        text-align: center;
+        padding: 2rem;
+        background: rgba(15, 23, 42, 0.6);
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .streak-number {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #FFC107;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .streak-label {
+        color: #94A3B8;
+        font-size: 1.1rem;
+    }
+
+    .study-time {
+        text-align: center;
+        padding: 2rem;
+        background: rgba(15, 23, 42, 0.6);
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .time-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #4CAF50;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .time-label {
+        color: #94A3B8;
+        font-size: 1.1rem;
+    }
+
+    .progress-section {
+        background: rgba(30, 41, 59, 0.8);
+        border-radius: 1rem;
+        padding: 2rem;
+    }
+
+    .progress-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .progress-item {
+        background: rgba(15, 23, 42, 0.6);
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .progress-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #2196F3;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .progress-label {
+        color: #94A3B8;
+        font-size: 1rem;
+    }
+
+    .stats-section {
+        background: rgba(30, 41, 59, 0.8);
+        border-radius: 1rem;
+        padding: 2rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    .stat-item {
+        background: rgba(15, 23, 42, 0.6);
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #E91E63;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .stat-label {
+        color: #94A3B8;
+        font-size: 1rem;
+    }
+
+    .activity-section {
+        background: rgba(30, 41, 59, 0.8);
+        border-radius: 1rem;
+        padding: 2rem;
+    }
+
+    .activity-list {
+        background: rgba(15, 23, 42, 0.6);
+        border-radius: 0.5rem;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .activity-item {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-info {
+        color: #F8FAFC;
+    }
+
+    .activity-time {
+        color: #94A3B8;
+        font-size: 0.9rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: #94A3B8;
+    }
+</style>
+
+<div class="profile-container">
+    <h1 class="profile-title">Your Profile</h1>
+
+    <div class="profile-grid">
+        <div class="left-column">
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <i class="fas fa-user"></i>
+                    USER INFORMATION
+                </h2>
+                <div class="user-info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Username</div>
+                        <div class="info-value">{{ username }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Join Date</div>
+                        <div class="info-value">{{ join_date }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Skill Level</div>
+                        <div class="info-value">{{ skill_level }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Status</div>
+                        <div class="info-value">{{ status }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <i class="fas fa-fire"></i>
+                    STUDY STREAK
+                </h2>
+                <div class="streak-display">
+                    <div class="streak-number">{{ study_streak }}</div>
+                    <div class="streak-label">Days</div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <i class="fas fa-clock"></i>
+                    TOTAL STUDY TIME
+                </h2>
+                <div class="study-time">
+                    <div class="time-number">{{ study_hours }}</div>
+                    <div class="time-label">Hours</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    LEARNING PROGRESS
+                </h2>
+                <div class="progress-grid">
+                    <div class="progress-item">
+                        <div class="progress-number">{{ lessons_completed }}</div>
+                        <div class="progress-label">Lessons Completed</div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-number">{{ quizzes_passed }}</div>
+                        <div class="progress-label">Quizzes Passed</div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-number">{{ achievements }}</div>
+                        <div class="progress-label">Achievements</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <i class="fas fa-trophy"></i>
+                    REVIEW STATISTICS
+                </h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ cards_reviewed }}</div>
+                        <div class="stat-label">Cards Reviewed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ accuracy_rate }}%</div>
+                        <div class="stat-label">Accuracy Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ retention_rate }}%</div>
+                        <div class="stat-label">Retention Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <i class="fas fa-history"></i>
+                    RECENT ACTIVITY
+                </h2>
+                <div class="activity-list">
+                    {% if activities %}
+                        {% for activity in activities %}
+                        <div class="activity-item">
+                            <div class="activity-info">{{ activity.description }}</div>
+                            <div class="activity-time">{{ activity.time }}</div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            No recent activity to display
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

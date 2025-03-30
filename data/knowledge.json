@@ -1,0 +1,117 @@
+[
+    {
+        "id": "preflop_position",
+        "title": "Preflop Position",
+        "description": "Understanding the importance of position in preflop play",
+        "difficulty": "beginner",
+        "prerequisites": [],
+        "explanations": {
+            "beginner": "Position in poker refers to where you are seated relative to the dealer button. The later your position, the more information you have about other players' actions before you need to act. This gives you an advantage in decision-making.",
+            "intermediate": "Position is crucial in poker because it affects your range construction and betting strategy. Later positions can play wider ranges and apply more pressure due to having more information and control over the hand.",
+            "advanced": "Positional advantage manifests in multiple ways: information advantage, control over pot size, ability to bluff more effectively, and better implied odds. Understanding these factors allows for more sophisticated preflop play."
+        },
+        "examples": [
+            {
+                "title": "Button vs Early Position",
+                "description": "In early position, you should play a tighter range (e.g., top 15% of hands) because you have less information and will be out of position postflop. On the button, you can play a wider range (e.g., top 40% of hands) because you have position and can control the action."
+            },
+            {
+                "title": "Blind vs Button",
+                "description": "When facing a button raise from the blinds, you can defend with a wider range than when facing an early position raise, as you'll have position postflop and can control the action."
+            }
+        ],
+        "related_concepts": ["range_construction", "betting_strategy", "implied_odds"]
+    },
+    {
+        "id": "range_construction",
+        "title": "Range Construction",
+        "description": "Building balanced and profitable ranges for different situations",
+        "difficulty": "intermediate",
+        "prerequisites": ["preflop_position"],
+        "explanations": {
+            "beginner": "A range is the collection of hands you would play in a specific situation. Building good ranges means choosing hands that work well together and make money in the long run.",
+            "intermediate": "Range construction involves understanding hand strength, position, opponent tendencies, and game theory optimal (GTO) principles. Your range should be balanced between value hands and bluffs.",
+            "advanced": "Advanced range construction considers multiple factors: hand strength, blockers, removal effects, and the ability to realize equity. It also involves understanding how your range interacts with your opponent's range."
+        },
+        "examples": [
+            {
+                "title": "UTG Opening Range",
+                "description": "A balanced UTG opening range might include: AA-JJ, AK-AQ, and some suited broadways. This range is strong enough to withstand 3-bets and has good playability postflop."
+            },
+            {
+                "title": "Button vs BB",
+                "description": "When raising from the button against the BB, you can include more suited connectors and one-gappers, as these hands have good implied odds and play well in position."
+            }
+        ],
+        "related_concepts": ["preflop_position", "betting_strategy", "game_theory"]
+    },
+    {
+        "id": "betting_strategy",
+        "title": "Betting Strategy",
+        "description": "Understanding when and how to bet in different situations",
+        "difficulty": "intermediate",
+        "prerequisites": ["range_construction"],
+        "explanations": {
+            "beginner": "Betting strategy involves deciding when to bet, how much to bet, and what hands to bet with. The main reasons to bet are for value (to get called by worse hands) or as a bluff (to get better hands to fold).",
+            "intermediate": "Effective betting strategy considers pot odds, implied odds, opponent tendencies, and board texture. It involves balancing your betting range between value bets and bluffs.",
+            "advanced": "Advanced betting strategy incorporates game theory optimal (GTO) principles, understanding bet sizing effects on opponent ranges, and using different bet sizes for different purposes."
+        },
+        "examples": [
+            {
+                "title": "Value Betting",
+                "description": "When you have a strong hand like top pair on a dry board, you should bet for value to get called by weaker hands like middle pair or bottom pair."
+            },
+            {
+                "title": "Bluffing",
+                "description": "On a coordinated board where your opponent's range is polarized, you can bluff with hands that have good blockers and can improve to strong hands."
+            }
+        ],
+        "related_concepts": ["range_construction", "pot_odds", "game_theory"]
+    },
+    {
+        "id": "pot_odds",
+        "title": "Pot Odds",
+        "description": "Understanding and using pot odds to make profitable decisions",
+        "difficulty": "beginner",
+        "prerequisites": [],
+        "explanations": {
+            "beginner": "Pot odds are the ratio of the current size of the pot to the cost of a contemplated call. They help you determine if calling a bet is profitable in the long run.",
+            "intermediate": "Pot odds calculations should consider implied odds (future betting) and reverse implied odds (potential losses). They help you make mathematically correct decisions.",
+            "advanced": "Advanced pot odds analysis includes understanding how your opponent's range affects your implied odds and how to manipulate pot odds through bet sizing."
+        },
+        "examples": [
+            {
+                "title": "Basic Pot Odds",
+                "description": "If the pot is $100 and your opponent bets $50, you're getting 3:1 odds (150:50). You need 25% equity to call profitably."
+            },
+            {
+                "title": "Implied Odds",
+                "description": "When drawing to a flush, you might call with worse immediate pot odds if you expect to win more money when you hit your draw."
+            }
+        ],
+        "related_concepts": ["implied_odds", "betting_strategy", "equity"]
+    },
+    {
+        "id": "game_theory",
+        "title": "Game Theory Optimal (GTO)",
+        "description": "Understanding and applying GTO principles in poker",
+        "difficulty": "advanced",
+        "prerequisites": ["range_construction", "betting_strategy"],
+        "explanations": {
+            "beginner": "GTO is a strategy that cannot be exploited by any other strategy. It involves playing balanced ranges and making decisions that are profitable regardless of your opponent's actions.",
+            "intermediate": "GTO play involves understanding mixed strategies, where you randomize between different actions with the same hand to make your play unexploitable.",
+            "advanced": "Advanced GTO concepts include understanding range vs range interactions, optimal bet sizing, and how to adjust your strategy based on stack depth and opponent tendencies."
+        },
+        "examples": [
+            {
+                "title": "Mixed Strategy",
+                "description": "With AK on the button, you might 3-bet 80% of the time and call 20% of the time against an early position raise to make your play unexploitable."
+            },
+            {
+                "title": "Range vs Range",
+                "description": "Understanding how your range interacts with your opponent's range helps you make better decisions about betting, calling, and folding."
+            }
+        ],
+        "related_concepts": ["range_construction", "betting_strategy", "position"]
+    }
+] 

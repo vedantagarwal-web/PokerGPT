@@ -1,0 +1,52 @@
+{
+    "positions": {
+        "utg": "UTG",
+        "early": "UTG",
+        "mp": "MP",
+        "middle": "MP",
+        "co": "CO",
+        "cutoff": "CO",
+        "btn": "BTN",
+        "button": "BTN",
+        "sb": "SB",
+        "small": "SB",
+        "bb": "BB",
+        "big": "BB"
+    },
+    "actions": {
+        "fold": "FOLD",
+        "call": "CALL",
+        "check": "CHECK",
+        "bet": "BET",
+        "raise": "RAISE",
+        "all in": "ALL_IN"
+    },
+    "hand_types": {
+        "high card": "HIGH_CARD",
+        "pair": "PAIR",
+        "two pair": "TWO_PAIR",
+        "three of a kind": "THREE_OF_A_KIND",
+        "straight": "STRAIGHT",
+        "flush": "FLUSH",
+        "full house": "FULL_HOUSE",
+        "four of a kind": "FOUR_OF_A_KIND",
+        "straight flush": "STRAIGHT_FLUSH",
+        "royal flush": "ROYAL_FLUSH"
+    },
+    "board_textures": {
+        "monotone": "MONOTONE",
+        "paired": "PAIRED",
+        "connected": "CONNECTED",
+        "disconnected": "DISCONNECTED",
+        "rainbow": "RAINBOW",
+        "dry": "DRY",
+        "wet": "WET"
+    },
+    "stack_sizes": {
+        "short": "SHORT",
+        "medium": "MEDIUM",
+        "deep": "DEEP",
+        "shallow": "SHORT",
+        "standard": "MEDIUM"
+    }
+} 

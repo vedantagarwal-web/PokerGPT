@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}PokerGPT - Your AI Poker Learning Companion{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero bg-primary text-white py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="display-4 fw-bold mb-4">Master Poker with AI</h1>
+                <p class="lead mb-4">PokerGPT combines advanced AI with proven poker strategy to help you improve your game. Get personalized recommendations, detailed analysis, and comprehensive learning paths.</p>
+                <div class="d-flex gap-3">
+                    <a href="/analyze" class="btn btn-light btn-lg">Analyze Your Hand</a>
+                    <a href="/learn" class="btn btn-outline-light btn-lg">Start Learning</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <img src="/static/images/hero-image.png" alt="PokerGPT Interface" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features mb-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Why Choose PokerGPT?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-robot fa-3x text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">AI-Powered Analysis</h3>
+                        <p class="card-text">Get instant GTO-based recommendations and detailed equity calculations for any poker situation.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-graduation-cap fa-3x text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">Personalized Learning</h3>
+                        <p class="card-text">Follow customized learning paths and track your progress with our spaced repetition system.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-chart-line fa-3x text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">Progress Tracking</h3>
+                        <p class="card-text">Monitor your improvement with detailed analytics and performance metrics.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works mb-5">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="step-number mb-3">1</div>
+                    <h4>Describe Your Hand</h4>
+                    <p>Tell us about your poker situation in natural language.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="step-number mb-3">2</div>
+                    <h4>Get Analysis</h4>
+                    <p>Receive instant GTO recommendations and equity calculations.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="step-number mb-3">3</div>
+                    <h4>Learn Concepts</h4>
+                    <p>Understand the reasoning behind each recommendation.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="step-number mb-3">4</div>
+                    <h4>Track Progress</h4>
+                    <p>Monitor your improvement over time.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta bg-light py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Improve Your Game?</h2>
+        <p class="lead mb-4">Join thousands of players who are already learning with PokerGPT.</p>
+        <a href="/signup" class="btn btn-primary btn-lg">Get Started Free</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .feature-icon {
+        color: var(--secondary-color);
+    }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        background-color: var(--secondary-color);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-weight: bold;
+    }
+    
+    .cta {
+        border-radius: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add any page-specific JavaScript here
+</script>
+{% endblock %} 

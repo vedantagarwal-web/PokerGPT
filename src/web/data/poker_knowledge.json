@@ -1,0 +1,282 @@
+{
+    "concepts": {
+        "position": {
+            "name": "Position",
+            "difficulty": "beginner",
+            "prerequisites": [],
+            "explanations": {
+                "beginner": "Position refers to where you are seated relative to the dealer button. Players in later positions (closer to the button) have an advantage because they act after seeing what earlier positions do. This information advantage allows them to make better decisions and play more hands profitably.",
+                "intermediate": "Position is one of the most important concepts in poker. In later positions, you can play a wider range of hands because you'll have more information about your opponents' actions. The button is the most profitable position, while early positions like UTG require tighter play. Always consider your position when deciding whether to play a hand.",
+                "advanced": "Positional advantage allows for more complex strategies like floating, check-raising, and thin value betting. Understanding position-based ranges and frequencies is essential for GTO play. You should have different continuation betting frequencies, check-raising ranges, and 3-betting ranges based on position."
+            },
+            "practice_exercises": [
+                "Play 20 hands focusing only on how position affects your decisions",
+                "Track your winrate from different positions over 100 hands",
+                "Review hand histories and identify mistakes made due to poor positional awareness"
+            ],
+            "key_points": [
+                "Later positions have more information and can play more hands",
+                "Early positions require tighter ranges",
+                "The button is the most profitable position",
+                "Position advantage persists on all streets"
+            ]
+        },
+        "pot_odds": {
+            "name": "Pot Odds",
+            "difficulty": "beginner",
+            "prerequisites": ["position"],
+            "explanations": {
+                "beginner": "Pot odds are the ratio of the current pot size to the cost of your call. For example, if the pot is $100 and you need to call $20, your pot odds are 5:1 (or you're getting 5-to-1 on your money). If your odds of winning are better than your pot odds, the call is profitable in the long run.",
+                "intermediate": "Pot odds help determine if a call is mathematically profitable. Compare the pot odds to your hand's equity against your opponent's range. If your equity percentage is higher than the percentage of the pot you need to contribute, the call is profitable. For example, if you need to call $25 into a $100 pot, you need at least 20% equity to break even.",
+                "advanced": "Advanced players consider implied odds (potential future bets you'll win), reverse implied odds (money you'll lose on future streets), and stack-to-pot ratios when calculating pot odds. Multi-street planning is crucial for drawing hands, as the current pot odds might not be sufficient but implied odds could make the call profitable."
+            },
+            "practice_exercises": [
+                "Calculate pot odds in 10 different scenarios",
+                "Compare pot odds to hand equity using an equity calculator",
+                "Practice making decisions based solely on pot odds for 20 hands"
+            ],
+            "key_points": [
+                "Compare pot odds to your equity to make mathematically correct calls",
+                "Pot odds = (current pot) : (amount to call)",
+                "Convert to percentage: amount to call / (amount to call + current pot)",
+                "Consider implied odds for drawing hands"
+            ]
+        },
+        "preflop_ranges": {
+            "name": "Preflop Ranges",
+            "difficulty": "intermediate",
+            "prerequisites": ["position", "pot_odds"],
+            "explanations": {
+                "beginner": "Preflop ranges are the collection of hands you would play in a specific position. Early positions (like UTG) should play tight ranges with strong hands, while later positions (like the button) can play wider ranges. Start with basic guidelines: play premium hands from any position, add strong hands in middle position, and include speculative hands on the button.",
+                "intermediate": "Understanding position-based opening ranges is crucial for preflop play. Early positions should open around 15-20% of hands, middle positions 20-25%, and late positions 30-50%. Your calling and 3-betting ranges should also vary by position. Use hand charts to study optimal opening ranges for each position.",
+                "advanced": "GTO preflop ranges are carefully balanced between value hands and bluffs, with specific frequencies for each action. They incorporate mixed strategies where some hands are played the same way only a percentage of the time. Advanced players adjust their ranges based on table dynamics, stack depths, and opponent tendencies."
+            },
+            "practice_exercises": [
+                "Memorize opening ranges for each position",
+                "Practice playing only according to a preflop chart for 50 hands",
+                "Review hands where you deviated from your ranges and analyze the results"
+            ],
+            "key_points": [
+                "Ranges should be tighter in early positions and wider in late positions",
+                "Premium hands (AA, KK, QQ, AK) can be played from any position",
+                "Suited connecters gain value in late position",
+                "Adjust ranges based on opponent tendencies and table dynamics"
+            ]
+        },
+        "board_texture": {
+            "name": "Board Texture",
+            "difficulty": "intermediate",
+            "prerequisites": ["preflop_ranges"],
+            "explanations": {
+                "beginner": "Board texture refers to how the community cards interact with each other. Wet boards have many straight and flush possibilities (like 9♥8♥7♦), while dry boards don't (like K♠7♦2♣). Understanding board texture helps you decide whether to continuation bet, check, or bluff.",
+                "intermediate": "Different board textures favor different ranges. Static boards (like K72 rainbow) don't change much with future cards and favor strong made hands. Dynamic boards (like 987 with flush draws) can change dramatically and favor drawing hands. Continuation bet more frequently on boards that favor your range.",
+                "advanced": "Advanced players analyze boards in terms of range advantage, nut advantage, and texture-based betting frequencies. They adjust bet sizing based on board texture, using smaller bets on wet boards where equities run close together, and larger bets on dry boards where equities are more polarized."
+            },
+            "practice_exercises": [
+                "Categorize 20 different flops as wet, dry, or neutral",
+                "Analyze how different board textures hit your typical opening ranges",
+                "Practice adjusting your c-betting strategy based on board texture"
+            ],
+            "key_points": [
+                "Dry boards favor the preflop aggressor and strong made hands",
+                "Wet boards favor drawing hands and encourage more checking",
+                "Bet smaller on wet boards and larger on dry boards",
+                "Consider how the board hits your range versus your opponent's range"
+            ]
+        },
+        "hand_reading": {
+            "name": "Hand Reading",
+            "difficulty": "advanced",
+            "prerequisites": ["board_texture", "preflop_ranges"],
+            "explanations": {
+                "beginner": "Hand reading is the process of narrowing down your opponent's possible holdings based on their actions throughout the hand. Start by putting them on a preflop range based on their position and actions, then narrow that range as the hand progresses.",
+                "intermediate": "Effective hand reading involves considering preflop action, position, and how they play different streets. Each bet, check, or raise provides information that helps narrow their range. Pay attention to bet sizing, timing tells, and previous patterns in their play.",
+                "advanced": "Advanced hand reading requires understanding player tendencies, bet sizing tells, and the entire action sequence across all streets. It involves thinking about hands in terms of ranges rather than specific holdings, and understanding how ranges interact with different board textures."
+            },
+            "practice_exercises": [
+                "Practice putting opponents on ranges and narrowing them street by street",
+                "Review hand histories and try to predict what hands opponents showed down",
+                "Use software to analyze range interactions on different board textures"
+            ],
+            "key_points": [
+                "Start with a preflop range based on position and action",
+                "Narrow the range based on each action and board texture",
+                "Consider what story their betting line is telling",
+                "Watch for sizing and timing tells that might reveal hand strength"
+            ]
+        },
+        "bet_sizing": {
+            "name": "Bet Sizing",
+            "difficulty": "intermediate",
+            "prerequisites": ["pot_odds", "board_texture"],
+            "explanations": {
+                "beginner": "Bet sizing is how much you choose to bet in relation to the pot. Small bets (25-35% of pot) get called more often but risk giving opponents good pot odds. Large bets (70-100% of pot) get called less often but win more when called. Your bet size should match your goal: bet smaller with medium-strength hands, larger with strong hands or bluffs.",
+                "intermediate": "Modern poker theory suggests using different bet sizes based on board texture and range advantage. Use smaller bets (30-40%) on wet boards where equities run closer together, and larger bets (60-75%) on dry boards where equities are more polarized. Consider using larger sizes for value bets on the river.",
+                "advanced": "GTO bet sizing involves using mixed strategies and multiple bet sizes in the same spot, depending on your exact hand. It requires understanding how different sizes affect your opponent's defense frequency and EV. Advanced players will have different sizing strategies for different board textures, opponents, and stack-to-pot ratios."
+            },
+            "practice_exercises": [
+                "Experiment with different bet sizes and track results",
+                "Analyze how your bet sizing affects your opponents' calling ranges",
+                "Practice using different sizes based on board texture"
+            ],
+            "key_points": [
+                "Match your bet size to your goal (value, bluff, protection)",
+                "Smaller bets on wet boards, larger bets on dry boards",
+                "Consider how your size affects opponents' pot odds",
+                "River bets are often larger since it's the last betting round"
+            ]
+        },
+        "gto_basics": {
+            "name": "GTO Basics",
+            "difficulty": "advanced",
+            "prerequisites": ["hand_reading", "bet_sizing"],
+            "explanations": {
+                "beginner": "Game Theory Optimal (GTO) play aims to create a balanced strategy that can't be exploited, regardless of what your opponents do. It involves playing with the right frequency of value bets and bluffs, and defending against bets at the correct frequency to make your opponents indifferent between betting and checking.",
+                "intermediate": "GTO concepts include minimum defense frequency (MDF), balanced betting ranges, and unexploitable play. MDF states that you should defend against a bet frequently enough that your opponent can't profit by betting any two cards. For example, against a pot-sized bet, you should continue with around 33% of your range.",
+                "advanced": "True GTO play requires understanding equilibrium strategies, indifference points, and range vs. range analysis. It involves using solvers to study optimal play in different scenarios and developing a deep understanding of balanced strategies across different board textures and stack depths."
+            },
+            "practice_exercises": [
+                "Study basic solver outputs for common spots",
+                "Practice playing balanced ranges of value bets and bluffs",
+                "Calculate minimum defense frequencies in different scenarios"
+            ],
+            "key_points": [
+                "Balance value bets with bluffs to be unexploitable",
+                "Defend against bets at the minimum defense frequency",
+                "GTO is the baseline strategy; exploit tendencies when detected",
+                "Perfect GTO play requires complex calculations and is practically unattainable"
+            ]
+        }
+    },
+    "learning_paths": {
+        "beginner": [
+            "position",
+            "pot_odds",
+            "preflop_ranges"
+        ],
+        "intermediate": [
+            "position",
+            "pot_odds",
+            "preflop_ranges",
+            "board_texture",
+            "bet_sizing"
+        ],
+        "advanced": [
+            "position",
+            "pot_odds",
+            "preflop_ranges",
+            "board_texture",
+            "bet_sizing",
+            "hand_reading",
+            "gto_basics"
+        ]
+    },
+    "lesson_plans": {
+        "position": {
+            "title": "Understanding Position in Poker",
+            "duration": "60 minutes",
+            "sections": [
+                {
+                    "title": "What is Position?",
+                    "content": "Position refers to where you sit relative to the dealer button, which determines when you act in the hand. Players act in clockwise order, with the small blind acting first preflop and the player after the button acting first on subsequent streets. Position is one of the most important concepts in poker because acting later gives you more information about your opponents' hands."
+                },
+                {
+                    "title": "Position Names and Order",
+                    "content": "From earliest to latest position: Small Blind (SB), Big Blind (BB), Under the Gun (UTG), UTG+1, Middle Position (MP), Hijack (HJ), Cutoff (CO), and Button (BTN). In 6-max games, positions start with UTG. The button is the most advantageous position because you act last postflop."
+                },
+                {
+                    "title": "Advantages of Position",
+                    "content": "Acting last gives you several advantages: 1) More information about opponents' hands, 2) Control over the final pot size, 3) Ability to bluff more effectively, 4) More profitable stealing opportunities, 5) Easier decision-making with more information."
+                },
+                {
+                    "title": "Position-Based Strategy",
+                    "content": "Adjust your strategy based on position: Play tighter ranges from early positions, wider ranges from late positions. Value bet more thinly in position. Bluff more frequently in position. Check-raise more from out of position. Continuation bet more selectively out of position."
+                },
+                {
+                    "title": "Common Position Mistakes",
+                    "content": "Avoid these common position-related mistakes: Playing too many hands out of position, Not leveraging your position advantage when in position, Folding too often to continuation bets when out of position, Not adjusting your range based on position, Calling 3-bets out of position with marginal hands."
+                }
+            ],
+            "practical_examples": [
+                {
+                    "scenario": "You hold A♥J♠ in UTG position at a 9-handed table.",
+                    "analysis": "This is a borderline hand in early position. While AJ is a strong hand, playing it from UTG means you'll be out of position against most of the table if called. Consider folding in tight games or against strong players, raising in looser games or against weaker players."
+                },
+                {
+                    "scenario": "You hold 8♠7♠ on the button after everyone has folded to you.",
+                    "analysis": "This is a clear raise. While 87s is a speculative hand, your button position gives you a significant advantage, making this a profitable steal attempt. If called, you'll have position throughout the hand, making it easier to realize your equity when you hit and fold when you miss."
+                }
+            ],
+            "quiz_questions": [
+                {
+                    "question": "Which position has the highest win rate in poker?",
+                    "options": ["UTG", "MP", "CO", "BTN", "BB"],
+                    "answer": "BTN",
+                    "explanation": "The button has the highest win rate because it gives you positional advantage throughout the hand, allowing you to act last on every postflop street."
+                },
+                {
+                    "question": "Which statement about position is false?",
+                    "options": [
+                        "Position advantage persists on all streets",
+                        "The small blind acts first preflop",
+                        "The big blind has the best position preflop",
+                        "You should play tighter ranges from early position",
+                        "The cutoff is the second-best position at the table"
+                    ],
+                    "answer": "The small blind acts first preflop",
+                    "explanation": "The small blind acts second-to-last preflop, after the button but before the big blind. Postflop, the small blind acts first in a heads-up pot."
+                }
+            ]
+        },
+        "pot_odds": {
+            "title": "Mastering Pot Odds",
+            "duration": "45 minutes",
+            "sections": [
+                {
+                    "title": "What Are Pot Odds?",
+                    "content": "Pot odds are the ratio between the current pot size and the cost of your contemplated call. They help you determine if a call is mathematically profitable in the long run. If the pot is $100 and you need to call $25, your pot odds are 4:1, meaning you win $4 for every $1 you risk."
+                },
+                {
+                    "title": "Calculating Pot Odds",
+                    "content": "To calculate pot odds: 1) Identify the current pot size, 2) Identify the amount you need to call, 3) Express as a ratio (pot : call), 4) Convert to percentage: call / (pot + call). For example, if the pot is $100 and the call is $25, your pot odds are 100:25 or 4:1, which is 25/(100+25) = 20%."
+                },
+                {
+                    "title": "Comparing Pot Odds to Equity",
+                    "content": "To make a profitable call, your equity (chance of winning) must exceed your pot odds percentage. If you need 20% equity to call, but your hand has 30% equity, the call is profitable. If your equity is less than the pot odds percentage, folding is correct."
+                },
+                {
+                    "title": "Implied Odds",
+                    "content": "Implied odds consider future bets you might win if you hit your hand. They allow you to call with drawing hands even when the immediate pot odds aren't sufficient. Consider stack sizes, opponent tendencies, and how disguised your hand will be if you hit."
+                },
+                {
+                    "title": "Reverse Implied Odds",
+                    "content": "Reverse implied odds occur when you make your hand but still lose to a better hand. Hands like second-pair or weak draws often have poor reverse implied odds. Consider the board texture and your opponent's likely range when evaluating reverse implied odds."
+                }
+            ],
+            "practical_examples": [
+                {
+                    "scenario": "You hold 9♥8♥ on a flop of K♥4♥2♦. The pot is 10BB, and your opponent bets 5BB.",
+                    "analysis": "You have a flush draw with 9 outs, giving you about 35% equity. The pot odds are 10:5 or 2:1, which is 5/(10+5) = 33%. Since your equity (35%) exceeds your pot odds percentage (33%), this is a profitable call."
+                },
+                {
+                    "scenario": "You hold A♠K♠ on a flop of J♦7♥3♣. The pot is 20BB, and your opponent bets 20BB (a pot-sized bet).",
+                    "analysis": "You have two overcards, giving you about 6 outs or 25% equity. The pot odds are 20:20 or 1:1, which is 20/(20+20) = 50%. Since your equity (25%) is less than your pot odds percentage (50%), this call is not directly profitable. You should fold unless you have strong reads or implied odds."
+                }
+            ],
+            "quiz_questions": [
+                {
+                    "question": "If the pot is 60BB and your opponent bets 30BB, what are your pot odds as a percentage?",
+                    "options": ["50%", "33%", "25%", "67%", "2:1"],
+                    "answer": "33%",
+                    "explanation": "The calculation is 30/(60+30) = 30/90 = 33%. This means you need at least 33% equity to make a profitable call."
+                },
+                {
+                    "question": "You have an open-ended straight draw (8 outs) on the flop. Approximately what equity do you have?",
+                    "options": ["17%", "20%", "31%", "35%", "45%"],
+                    "answer": "31%",
+                    "explanation": "With 8 outs, you have approximately 8 * 4 = 32% equity on the flop (using the Rule of 4 and 2). The exact calculation is closer to 31%."
+                }
+            ]
+        }
+    }
+} 

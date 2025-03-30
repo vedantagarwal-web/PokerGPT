@@ -1,0 +1,146 @@
+{
+    "BTN_AsKh_": {
+        "action": "raise",
+        "frequency": 1.0,
+        "ev": 0.85,
+        "size": 2.5
+    },
+    "BTN_AsKh_Jh9d2c": {
+        "action": "bet",
+        "frequency": 0.8,
+        "ev": 0.95,
+        "size": 0.75
+    },
+    "CO_AsKh_": {
+        "action": "raise",
+        "frequency": 1.0,
+        "ev": 0.75,
+        "size": 2.5
+    },
+    "CO_AsKh_Jh9d2c": {
+        "action": "bet",
+        "frequency": 0.7,
+        "ev": 0.85,
+        "size": 0.75
+    },
+    "MP_AsKh_": {
+        "action": "raise",
+        "frequency": 1.0,
+        "ev": 0.65,
+        "size": 2.5
+    },
+    "MP_AsKh_Jh9d2c": {
+        "action": "bet",
+        "frequency": 0.6,
+        "ev": 0.75,
+        "size": 0.75
+    },
+    "UTG_AsKh_": {
+        "action": "raise",
+        "frequency": 1.0,
+        "ev": 0.55,
+        "size": 2.5
+    },
+    "UTG_AsKh_Jh9d2c": {
+        "action": "bet",
+        "frequency": 0.5,
+        "ev": 0.65,
+        "size": 0.75
+    },
+    "BB_AsKh_": {
+        "action": "raise",
+        "frequency": 1.0,
+        "ev": 0.95,
+        "size": 3.0
+    },
+    "BB_AsKh_Jh9d2c": {
+        "action": "bet",
+        "frequency": 0.9,
+        "ev": 1.05,
+        "size": 0.75
+    },
+    "SB_AsKh_": {
+        "action": "raise",
+        "frequency": 1.0,
+        "ev": 0.90,
+        "size": 3.0
+    },
+    "SB_AsKh_Jh9d2c": {
+        "action": "bet",
+        "frequency": 0.85,
+        "ev": 1.00,
+        "size": 0.75
+    },
+    "BTN_QQ_": {
+        "action": "raise",
+        "frequency": 1.0,
+        "ev": 1.25,
+        "size": 2.5
+    },
+    "BTN_QQ_Jh9d2c": {
+        "action": "bet",
+        "frequency": 0.9,
+        "ev": 1.35,
+        "size": 0.75
+    },
+    "CO_QQ_": {
+        "action": "raise",
+        "frequency": 1.0,
+        "ev": 1.15,
+        "size": 2.5
+    },
+    "CO_QQ_Jh9d2c": {
+        "action": "bet",
+        "frequency": 0.85,
+        "ev": 1.25,
+        "size": 0.75
+    },
+    "MP_QQ_": {
+        "action": "raise",
+        "frequency": 1.0,
+        "ev": 1.05,
+        "size": 2.5
+    },
+    "MP_QQ_Jh9d2c": {
+        "action": "bet",
+        "frequency": 0.8,
+        "ev": 1.15,
+        "size": 0.75
+    },
+    "UTG_QQ_": {
+        "action": "raise",
+        "frequency": 1.0,
+        "ev": 0.95,
+        "size": 2.5
+    },
+    "UTG_QQ_Jh9d2c": {
+        "action": "bet",
+        "frequency": 0.75,
+        "ev": 1.05,
+        "size": 0.75
+    },
+    "BB_QQ_": {
+        "action": "raise",
+        "frequency": 1.0,
+        "ev": 1.35,
+        "size": 3.0
+    },
+    "BB_QQ_Jh9d2c": {
+        "action": "bet",
+        "frequency": 0.95,
+        "ev": 1.45,
+        "size": 0.75
+    },
+    "SB_QQ_": {
+        "action": "raise",
+        "frequency": 1.0,
+        "ev": 1.30,
+        "size": 3.0
+    },
+    "SB_QQ_Jh9d2c": {
+        "action": "bet",
+        "frequency": 0.90,
+        "ev": 1.40,
+        "size": 0.75
+    }
+} 
