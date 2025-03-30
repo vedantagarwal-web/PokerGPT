@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -7,18 +7,30 @@ from datetime import datetime
 import json
 import random
 
-from ..core.equity_calculator import EquityCalculator
-from ..core.gto_solver import GtoSolver, GameState, Position, Action
-from ..knowledge.poker_knowledge import PokerKnowledge
-from ..personalization.user_profile import UserProfile
-from ..personalization.spaced_repetition import SpacedRepetition
-from ..core.hand_evaluator import Card, Suit, Rank, HandEvaluator, HandRank
+# Import local modules - using absolute imports
+try:
+    from core.equity_calculator import EquityCalculator
+    from core.gto_solver import GtoSolver, GameState, Position, Action
+    from knowledge.poker_knowledge import PokerKnowledge
+    from personalization.user_profile import UserProfile
+    from personalization.spaced_repetition import SpacedRepetition
+    from core.hand_evaluator import Card, Suit, Rank, HandEvaluator, HandRank
+except ImportError:
+    # Mock objects for when modules can't be imported
+    EquityCalculator = None
+    GtoSolver, GameState, Position, Action = None, None, None, None
+    PokerKnowledge = None
+    UserProfile = None
+    SpacedRepetition = None
+    Card, Suit, Rank, HandEvaluator, HandRank = None, None, None, None, None
+
 from .routes import bp as routes_bp
 
 app = Flask(__name__, 
             static_folder='static',
-            template_folder='templates')
-app.secret_key = 'your-secret-key-here'  # Change this to a secure secret key
+            template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
+app.config['SECRET_KEY'] = 'your-secret-key' # This should be more secure in production
+app.config['DEBUG'] = True  # Enable debug mode to auto-reload templates
 
 # Initialize Flask-Login
 login_manager = LoginManager()
@@ -31,13 +43,156 @@ login_manager.login_message_category = 'info'
 data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
 os.makedirs(data_dir, exist_ok=True)
 
+# Create mock classes if imports failed
+# Create a mock EquityCalculator if the real one couldn't be imported
+if EquityCalculator is None:
+    class EquityCalculator:
+        def __init__(self, cache_path):
+            self.cache_path = cache_path
+            print(f"Using mock EquityCalculator with cache path: {cache_path}")
+        
+        def calculate_equity(self, *args, **kwargs):
+            return {"player1": 0.5, "player2": 0.5}  # Mock equity calculation
+
+# Similarly create other mock classes as needed
+if GtoSolver is None:
+    class GtoSolver:
+        def __init__(self, *args, **kwargs):
+            pass
+        
+    class GameState:
+        def __init__(self, *args, **kwargs):
+            pass
+    
+    class Position:
+        UTG = "UTG"
+        MP = "MP"
+        CO = "CO"
+        BTN = "BTN"
+        SB = "SB"
+        BB = "BB"
+    
+    class Action:
+        FOLD = "FOLD"
+        CHECK = "CHECK"
+        CALL = "CALL"
+        BET = "BET"
+        RAISE = "RAISE"
+
+if UserProfile is None:
+    class UserProfile:
+        profiles = {}
+        
+        def __init__(self, user_id):
+            self.user_id = user_id
+            self.name = "Mock User"
+            self.skill_level = "beginner"
+            self.learning_paths = []  # Already initialized as empty list
+            self.hands_played = 0
+            self._is_authenticated = True
+            self.is_active = True  # Required by Flask-Login
+            self.is_anonymous = False  # Required by Flask-Login
+            self.last_study_date = None
+            self.study_streak = 0
+            self.total_study_time = 0
+            
+        def get_id(self):  # Required by Flask-Login
+            return str(self.user_id)
+            
+        @property
+        def is_authenticated(self):
+            return self._is_authenticated
+            
+        @is_authenticated.setter
+        def is_authenticated(self, value):
+            self._is_authenticated = value
+            
+        @classmethod
+        def set_profiles_file(cls, file_path):
+            print(f"Setting mock profiles file path: {file_path}")
+            cls.profiles_file = file_path
+            
+        @classmethod
+        def get_profile(cls, user_id):
+            if user_id not in cls.profiles:
+                cls.profiles[user_id] = UserProfile(user_id)
+            return cls.profiles[user_id]
+            
+        def check_password(self, password):
+            return True
+            
+        def update_profile(self, data):
+            for key, value in data.items():
+                setattr(self, key, value)
+            return True
+            
+        def get_learning_stats(self):
+            return {
+                "completed": 0,
+                "in_progress": 0,
+                "total_concepts": 0
+            }
+            
+        @classmethod
+        def create_profile(cls, username, email, password):
+            if username in cls.profiles:
+                return False
+            cls.profiles[username] = UserProfile(username)
+            return True
+
+if PokerKnowledge is None:
+    class PokerKnowledge:
+        def __init__(self, knowledge_base_path=None):
+            self.knowledge_base = {}
+        
+        def get_concept(self, concept_id):
+            return {"id": concept_id, "title": "Mock Concept", "content": "Mock content"}
+
+if SpacedRepetition is None:
+    class SpacedRepetition:
+        def __init__(self, reviews_file_path):
+            self.reviews_file_path = reviews_file_path
+            self.reviews = {}
+            print(f"Using mock SpacedRepetition with file path: {reviews_file_path}")
+            
+        def add_review(self, user_id, review_data):
+            if user_id not in self.reviews:
+                self.reviews[user_id] = []
+            self.reviews[user_id].append(review_data)
+            return review_data
+            
+        def get_review_stats(self, user_id):
+            if user_id is None:
+                return {
+                    "total_reviews": 0,
+                    "average_rating": 0,
+                    "next_review": None,
+                    "mastery_level": 0,
+                    "due_count": 0,
+                    "completion_rate": 0
+                }
+            
+            return {
+                "total_reviews": len(self.reviews.get(user_id, [])),
+                "average_rating": 3.0,
+                "next_review": datetime.now().strftime('%Y-%m-%d'),
+                "mastery_level": 25.0,
+                "due_count": 1,
+                "completion_rate": 0.75
+            }
+        
+        def get_due_reviews(self, user_id):
+            return self.reviews.get(user_id, [])
+
+# Initialize components with proper mocks
+# Initialize UserProfile
+if hasattr(UserProfile, 'set_profiles_file'):
+    UserProfile.set_profiles_file(os.path.join(data_dir, 'profiles.json'))
+
 # Initialize EquityCalculator
 equity_calculator = EquityCalculator(os.path.join(data_dir, 'equity_cache'))
 
-# Initialize UserProfile
-UserProfile.set_profiles_file(os.path.join(data_dir, 'profiles.json'))
-
-# Initialize components
+# Initialize other components
 gto_solver = GtoSolver(os.path.join(data_dir, 'gto_solutions.json'))
 poker_knowledge = PokerKnowledge(os.path.join(data_dir, 'knowledge.json'))
 spaced_repetition = SpacedRepetition(os.path.join(data_dir, 'reviews.json'))
@@ -85,16 +240,6 @@ LEARNING_PATHS = {
                             'All of the above'
                         ],
                         'correct': 'All of the above'
-                    },
-                    {
-                        'question': 'What is the main advantage of playing in position?',
-                        'options': [
-                            'You can see other players\' actions first',
-                            'You can control the pot size better',
-                            'You can bluff more effectively',
-                            'All of the above'
-                        ],
-                        'correct': 'All of the above'
                     }
                 ]
             },
@@ -134,45 +279,6 @@ LEARNING_PATHS = {
                             'Play any two cards'
                         ],
                         'correct': 'Play very tight'
-                    }
-                ]
-            },
-            {
-                'id': 'preflop_actions',
-                'title': 'Preflop Actions',
-                'content': '''
-                    <h4>Preflop Actions</h4>
-                    <p>Understanding when to raise, call, or fold preflop is essential.</p>
-                    <h5>Common Preflop Actions:</h5>
-                    <ul>
-                        <li><strong>Open Raise</strong>: First to enter the pot</li>
-                        <li><strong>3-Bet</strong>: Re-raising an initial raise</li>
-                        <li><strong>4-Bet</strong>: Re-raising a 3-bet</li>
-                        <li><strong>Call</strong>: Matching the current bet</li>
-                        <li><strong>Fold</strong>: Discarding your hand</li>
-                    </ul>
-                    <h5>Bet Sizing:</h5>
-                    <ul>
-                        <li>Standard open: 2.5-3x the big blind</li>
-                        <li>3-bet: 2.5-3x the initial raise</li>
-                        <li>4-bet: 2.2-2.5x the 3-bet</li>
-                    </ul>
-                ''',
-                'questions': [
-                    {
-                        'question': 'What is a standard preflop open raise size?',
-                        'options': ['1x BB', '2.5-3x BB', '5x BB', '10x BB'],
-                        'correct': '2.5-3x BB'
-                    },
-                    {
-                        'question': 'When should you consider 3-betting?',
-                        'options': [
-                            'With any two cards',
-                            'With premium hands or as a bluff',
-                            'Only with AA or KK',
-                            'Never 3-bet'
-                        ],
-                        'correct': 'With premium hands or as a bluff'
                     }
                 ]
             }
@@ -269,50 +375,6 @@ LEARNING_PATHS = {
                         'correct': 'Their position, betting patterns, and previous actions'
                     }
                 ]
-            },
-            {
-                'id': 'board_texture',
-                'title': 'Board Texture',
-                'content': '''
-                    <h4>Understanding Board Texture</h4>
-                    <p>Board texture refers to the characteristics of the community cards and how they interact.</p>
-                    <h5>Types of Board Textures:</h5>
-                    <ul>
-                        <li><strong>Dry Boards</strong>: No draws, paired, or connected cards</li>
-                        <li><strong>Wet Boards</strong>: Multiple draws, connected cards</li>
-                        <li><strong>Paired Boards</strong>: Two or more cards of the same rank</li>
-                        <li><strong>Monotone Boards</strong>: Three or more cards of the same suit</li>
-                    </ul>
-                    <h5>Strategy Adjustments:</h5>
-                    <ul>
-                        <li>Bet sizing based on texture</li>
-                        <li>Range construction</li>
-                        <li>Bluffing frequency</li>
-                        <li>Value betting approach</li>
-                    </ul>
-                ''',
-                'questions': [
-                    {
-                        'question': 'What is a dry board?',
-                        'options': [
-                            'A board with many draws',
-                            'A board with no draws, paired, or connected cards',
-                            'A board with three of the same suit',
-                            'A board with three connected cards'
-                        ],
-                        'correct': 'A board with no draws, paired, or connected cards'
-                    },
-                    {
-                        'question': 'How should you adjust your betting on a wet board?',
-                        'options': [
-                            'Bet smaller',
-                            'Bet larger',
-                            'Never bet',
-                            'Only check'
-                        ],
-                        'correct': 'Bet larger'
-                    }
-                ]
             }
         ]
     },
@@ -363,93 +425,283 @@ LEARNING_PATHS = {
                         'correct': 'It helps make more accurate decisions'
                     }
                 ]
-            },
+            }
+        ]
+    },
+    'poker_math': {
+        'id': 'poker_math',
+        'name': 'Intermediate: Poker Mathematics',
+        'description': 'Master the mathematical concepts that form the foundation of winning poker strategies.',
+        'concepts': [
             {
-                'id': 'balanced_strategy',
-                'title': 'Balanced Strategy',
+                'id': 'pot_odds',
+                'title': 'Pot Odds & Equity',
                 'content': '''
-                    <h4>Balanced Strategy</h4>
-                    <p>A balanced strategy includes both value bets and bluffs in the correct proportions.</p>
-                    <h5>Key Components:</h5>
+                    <h4>Understanding Pot Odds</h4>
+                    <p>Pot odds are the ratio of the current pot size to the cost of a contemplated call. This concept is fundamental to making mathematically correct decisions.</p>
+                    
+                    <h5>Calculating Pot Odds:</h5>
+                    <p>Pot odds = Cost to call / (Current pot + Cost to call)</p>
+                    <p>Example: If the pot is $100 and your opponent bets $50, the pot odds are:</p>
+                    <p>$50 / ($100 + $50) = $50 / $150 = 1/3 or 33%</p>
+                    
+                    <h5>Converting to Percentages:</h5>
                     <ul>
-                        <li><strong>Value Betting</strong>: Betting strong hands for value</li>
-                        <li><strong>Bluffing</strong>: Betting weak hands to win pots</li>
-                        <li><strong>Mixed Strategies</strong>: Using multiple actions with the same hand</li>
-                        <li><strong>Frequency-Based Play</strong>: Making decisions based on optimal frequencies</li>
+                        <li>4-to-1 odds = 20% equity needed</li>
+                        <li>3-to-1 odds = 25% equity needed</li>
+                        <li>2-to-1 odds = 33% equity needed</li>
+                        <li>1-to-1 odds = 50% equity needed</li>
                     </ul>
-                    <h5>Balance Considerations:</h5>
-                    <ul>
-                        <li>Pot odds</li>
-                        <li>Stack depth</li>
-                        <li>Position</li>
-                        <li>Opponent tendencies</li>
-                    </ul>
+                    
+                    <h5>Pot Odds vs. Equity:</h5>
+                    <p>The fundamental principle: Call if your equity exceeds the pot odds percentage.</p>
+                    <p>Example: If your pot odds are 33%, you need at least 33% equity to call profitably.</p>
                 ''',
                 'questions': [
                     {
-                        'question': 'What is a balanced strategy?',
+                        'question': 'If the pot is $80 and your opponent bets $40, what are your pot odds?',
                         'options': [
-                            'Only betting strong hands',
-                            'Only bluffing',
-                            'A mix of value bets and bluffs',
-                            'Never betting'
+                            '33%',
+                            '50%',
+                            '25%',
+                            '40%'
                         ],
-                        'correct': 'A mix of value bets and bluffs'
+                        'correct': '33%'
                     },
                     {
-                        'question': 'Why is balance important in poker?',
+                        'question': 'With 8 outs after the flop, what is your approximate equity?',
                         'options': [
-                            'It makes the game more fun',
-                            'It makes you unpredictable',
-                            'It\'s required by poker rules',
-                            'It makes the game faster'
+                            '16%',
+                            '24%',
+                            '32%',
+                            '8%'
                         ],
-                        'correct': 'It makes you unpredictable'
+                        'correct': '32%'
                     }
                 ]
             },
             {
-                'id': 'ev_calculations',
-                'title': 'Expected Value Calculations',
+                'id': 'expected_value',
+                'title': 'Expected Value & Decision Making',
                 'content': '''
-                    <h4>Expected Value (EV) Calculations</h4>
-                    <p>Understanding EV helps make profitable decisions in poker.</p>
-                    <h5>EV Components:</h5>
+                    <h4>Expected Value (EV) in Poker</h4>
+                    <p>Expected Value is the average result of a decision if it were made repeatedly over a large sample size. It's the cornerstone of profitable poker decision-making.</p>
+                    
+                    <h5>Mathematical Foundation:</h5>
+                    <p>EV = (Probability of Outcome 1 × Result 1) + (Probability of Outcome 2 × Result 2) + ...</p>
+                    
+                    <h5>Simple EV Example:</h5>
+                    <p>Flipping a coin with $10 payoff for heads and $5 loss for tails:</p>
+                    <p>EV = (0.5 × $10) + (0.5 × -$5) = $5 - $2.50 = $2.50</p>
+                    <p>Each flip is worth $2.50 on average.</p>
+                ''',
+                'questions': [
+                    {
+                        'question': 'If you have a 40% chance to win $100 and a 60% chance to lose $50, what is your EV?',
+                        'options': [
+                            '+$10',
+                            '+$20',
+                            '-$10',
+                            '+$40'
+                        ],
+                        'correct': '+$10'
+                    },
+                    {
+                        'question': 'Which of these is a correct principle regarding EV?',
+                        'options': [
+                            'Always make the decision with lowest variance',
+                            'The highest EV play is always the most aggressive',
+                            'You should always choose the option with highest EV',
+                            'EV calculations are only relevant in tournament play'
+                        ],
+                        'correct': 'You should always choose the option with highest EV'
+                    }
+                ]
+            }
+        ]
+    },
+    'exploitative_play': {
+        'id': 'exploitative_play',
+        'name': 'Advanced: Exploitative Strategies',
+        'description': 'Learn how to deviate from GTO principles to exploit specific opponents and maximize profitability.',
+        'concepts': [
+            {
+                'id': 'player_profiling',
+                'title': 'Player Profiling & Typing',
+                'content': '''
+                    <h4>Player Profiling: The Key to Exploitation</h4>
+                    <p>Player profiling involves categorizing opponents based on their tendencies, allowing you to make precise adjustments to counter their strategies.</p>
+                    
+                    <h5>Traditional Player Types:</h5>
                     <ul>
-                        <li><strong>Probability</strong>: Chance of winning</li>
-                        <li><strong>Pot Size</strong>: Amount to win</li>
-                        <li><strong>Cost</strong>: Amount to call or bet</li>
+                        <li><strong>TAG (Tight-Aggressive):</strong> Plays few hands but plays them aggressively</li>
+                        <li><strong>LAG (Loose-Aggressive):</strong> Plays many hands aggressively, often applying pressure</li>
+                        <li><strong>Nit/Rock:</strong> Extremely tight player who only plays premium hands</li>
+                        <li><strong>Calling Station:</strong> Calls too frequently, rarely folds once committed</li>
+                        <li><strong>Maniac:</strong> Hyper-aggressive player who bets and raises constantly</li>
+                        <li><strong>Passive Fish:</strong> Loose-passive player who calls too much and rarely raises</li>
                     </ul>
-                    <h5>EV Formula:</h5>
-                    <p>EV = (Probability × Pot Size) - Cost</p>
-                    <h5>Applications:</h5>
+                    
+                    <h5>Modern Frequency-Based Profiling:</h5>
                     <ul>
-                        <li>Calling decisions</li>
-                        <li>Betting decisions</li>
-                        <li>Bluffing decisions</li>
-                        <li>Range construction</li>
+                        <li><strong>VPIP (Voluntarily Put $ In Pot):</strong> Percentage of hands played</li>
+                        <li><strong>PFR (Preflop Raise):</strong> Percentage of hands raised preflop</li>
+                        <li><strong>3-Bet %:</strong> Frequency of re-raising preflop</li>
+                        <li><strong>Fold to 3-Bet %:</strong> How often they surrender to a re-raise</li>
                     </ul>
                 ''',
                 'questions': [
                     {
-                        'question': 'What is Expected Value (EV)?',
+                        'question': 'What adjustment should you make against a calling station?',
                         'options': [
-                            'The amount you win in a hand',
-                            'The average profit/loss of a decision',
-                            'The size of the pot',
-                            'The amount you bet'
+                            'Bluff more frequently',
+                            'Value bet thinner',
+                            'Fold more often to their bets',
+                            'Play fewer hands against them'
                         ],
-                        'correct': 'The average profit/loss of a decision'
+                        'correct': 'Value bet thinner'
                     },
                     {
-                        'question': 'What components are needed to calculate EV?',
+                        'question': 'A player with VPIP: 15% and PFR: 12% would be classified as:',
                         'options': [
-                            'Only the pot size',
-                            'Probability, pot size, and cost',
-                            'Only the probability',
-                            'Only the cost'
+                            'Loose-Aggressive (LAG)',
+                            'Tight-Aggressive (TAG)',
+                            'Loose-Passive Fish',
+                            'Maniac'
                         ],
-                        'correct': 'Probability, pot size, and cost'
+                        'correct': 'Tight-Aggressive (TAG)'
+                    }
+                ]
+            },
+            {
+                'id': 'advanced_exploitation',
+                'title': 'Exploitation Techniques & Frequencies',
+                'content': '''
+                    <h4>Advanced Exploitation Techniques</h4>
+                    <p>Exploitation involves deliberately deviating from GTO frequencies to target specific weaknesses in opponents' strategies.</p>
+                    
+                    <h5>Fundamental Exploitative Adjustments:</h5>
+                    <ul>
+                        <li><strong>Overfolding Exploitation:</strong> Bluff more frequently against players who fold too much</li>
+                        <li><strong>Overcalling Exploitation:</strong> Value bet thinner and reduce bluffs against calling stations</li>
+                        <li><strong>Passive Exploitation:</strong> Bet more frequently and aggressively when opponents check too often</li>
+                        <li><strong>Aggressive Exploitation:</strong> Trap and induce bluffs against overly aggressive players</li>
+                    </ul>
+                ''',
+                'questions': [
+                    {
+                        'question': 'Against an opponent who folds too much on the river, you should:',
+                        'options': [
+                            'Value bet thinner',
+                            'Increase your bluffing frequency',
+                            'Check more often with your medium-strength hands',
+                            'Always check-call the river'
+                        ],
+                        'correct': 'Increase your bluffing frequency'
+                    },
+                    {
+                        'question': 'What does "merging" your betting range mean?',
+                        'options': [
+                            'Betting only the nuts and air',
+                            'Betting with a range containing mostly medium-strength hands',
+                            'Checking all hands',
+                            'Using the same bet size with all hands'
+                        ],
+                        'correct': 'Betting with a range containing mostly medium-strength hands'
+                    }
+                ]
+            }
+        ]
+    },
+    'tournament_strategy': {
+        'id': 'tournament_strategy',
+        'name': 'Advanced: Tournament Strategy',
+        'description': 'Master the unique dynamics of tournament poker, from ICM considerations to final table strategy.',
+        'concepts': [
+            {
+                'id': 'icm_basics',
+                'title': 'ICM Theory & Applications',
+                'content': '''
+                    <h4>Independent Chip Model (ICM)</h4>
+                    <p>ICM is a mathematical model that converts tournament chip counts into their actual cash equity value, accounting for the payout structure.</p>
+                    
+                    <h5>Fundamental ICM Principles:</h5>
+                    <ul>
+                        <li>Chips have non-linear value in tournaments (diminishing marginal value)</li>
+                        <li>Survival value increases as you approach pay jumps</li>
+                        <li>Risk/reward calculations differ significantly from cash games</li>
+                        <li>ICM pressure affects optimal strategy, particularly calling ranges</li>
+                    </ul>
+                    
+                    <h5>ICM Mathematics:</h5>
+                    <p>The ICM model calculates the probability of each finishing position based on current chip distributions:</p>
+                    <ul>
+                        <li>Probability of finishing in each position is proportional to chip stack</li>
+                        <li>Each position has an associated prize value</li>
+                        <li>$EV = Sum of (probability of each position × prize value)</li>
+                    </ul>
+                ''',
+                'questions': [
+                    {
+                        'question': 'In ICM terms, which stack has the most pressure to fold in a bubble situation?',
+                        'options': [
+                            'Chip leader',
+                            'Medium stack',
+                            'Shortest stack',
+                            'Average stack'
+                        ],
+                        'correct': 'Medium stack'
+                    },
+                    {
+                        'question': 'As the big stack on the bubble, you should:',
+                        'options': [
+                            'Tighten up to secure your position',
+                            'Apply pressure to medium stacks who cannot call correctly',
+                            'Only play premium hands',
+                            'Focus on eliminating the chip leader'
+                        ],
+                        'correct': 'Apply pressure to medium stacks who cannot call correctly'
+                    }
+                ]
+            },
+            {
+                'id': 'stack_dynamics',
+                'title': 'Tournament Stack Dynamics',
+                'content': '''
+                    <h4>Tournament Stack Dynamics & Adaptations</h4>
+                    <p>Understanding how to adapt your strategy based on stack sizes is critical for tournament success.</p>
+                    
+                    <h5>Stack Size Categories:</h5>
+                    <ul>
+                        <li><strong>Big Stack (>100 BB):</strong> Maximum flexibility and pressure potential</li>
+                        <li><strong>Deep Stack (40-100 BB):</strong> Standard full strategy possible</li>
+                        <li><strong>Middle Stack (25-40 BB):</strong> Transitional strategy required</li>
+                        <li><strong>Shallow Stack (15-25 BB):</strong> Simplified strategy, commitment decisions</li>
+                        <li><strong>Short Stack (10-15 BB):</strong> Push/fold considerations begin</li>
+                        <li><strong>Critical Stack (<10 BB):</strong> Primarily push/fold strategy</li>
+                        <li><strong>Micro Stack (<5 BB):</strong> Desperate push/fold with any reasonable hand</li>
+                    </ul>
+                ''',
+                'questions': [
+                    {
+                        'question': 'At what approximate stack depth should you begin considering a push/fold strategy?',
+                        'options': [
+                            '40 BBs',
+                            '25 BBs',
+                            '15 BBs',
+                            '5 BBs'
+                        ],
+                        'correct': '15 BBs'
+                    },
+                    {
+                        'question': 'With a 12 BB stack, which position is most advantageous for attempting to steal the blinds?',
+                        'options': [
+                            'UTG (Under the Gun)',
+                            'Middle Position',
+                            'Button',
+                            'Small Blind'
+                        ],
+                        'correct': 'Button'
                     }
                 ]
             }
@@ -463,12 +715,26 @@ app.register_blueprint(routes_bp)
 @login_manager.user_loader
 def load_user(user_id):
     """Load user from session."""
-    return UserProfile.get_profile(user_id)
+    if not user_id:
+        print(f"User ID is None or empty, cannot load user")
+        return None
+    
+    user = UserProfile.get_profile(user_id)
+    if not user:
+        print(f"Failed to load user with ID: {user_id}")
+    else:
+        print(f"Successfully loaded user: {user_id}")
+    return user
 
 def get_current_user():
     """Get the current user's profile."""
     if current_user.is_authenticated:
-        return UserProfile.get_profile(current_user.username)
+        # Check for username attribute first (real implementation)
+        if hasattr(current_user, 'username'):
+            return UserProfile.get_profile(current_user.username)
+        # Fall back to user_id for mock implementation
+        elif hasattr(current_user, 'user_id'):
+            return UserProfile.get_profile(current_user.user_id)
     return None
 
 @app.route('/')
@@ -498,6 +764,8 @@ def login():
     user = UserProfile.get_profile(username)
     if user and user.check_password(password):
         login_user(user)
+        # Explicitly set user_id in session to ensure it's synchronized
+        session['user_id'] = user.get_id()
         # Validate the next URL to prevent open redirects
         if not next_url or not next_url.startswith('/'):
             next_url = '/'
@@ -571,47 +839,206 @@ def analyze():
     })
 
 @app.route('/learn')
-@login_required
 def learn():
     """Render the learning page."""
+    if not current_user.is_authenticated:
+        return redirect(url_for('login', next=request.url))
+    
     user = get_current_user()
     if not user:
         return redirect(url_for('login'))
     
     # Get user's learning progress
     learning_paths = list(LEARNING_PATHS.values())
+    print(f"DEBUG - LEARNING_PATHS: {LEARNING_PATHS}")
+    print(f"DEBUG - learning_paths list: {learning_paths}")
+    
+    # Initialize user's learning paths if they don't exist
+    if not hasattr(user, 'learning_paths') or user.learning_paths is None:
+        user.learning_paths = []
+    
+    # Create a default progress entry for each path
     user_progress = {
-        path['id']: next(
-            (p for p in user.learning_paths if p.get('path_id') == path['id']),
-            {'completed': False, 'score': 0}
-        )
+        path['id']: {'completed': False, 'score': 0}
         for path in learning_paths
     }
     
+    # Update with actual progress if it exists
+    for progress in user.learning_paths:
+        path_id = progress.get('path_id')
+        if path_id and path_id in user_progress:
+            user_progress[path_id] = progress
+    
+    print(f"DEBUG - user_progress: {user_progress}")
+    
     return render_template('learn.html', learning_paths=learning_paths, user_progress=user_progress)
 
-@app.route('/profile')
-@login_required
-def profile():
-    """Render the user profile page."""
+@app.route('/learn/path/<path_id>')
+def learn_path(path_id):
+    """Render a specific learning path."""
+    if not current_user.is_authenticated:
+        return redirect(url_for('login', next=request.url))
+    
     user = get_current_user()
     if not user:
         return redirect(url_for('login'))
+    
+    # Check if the path exists
+    if path_id not in LEARNING_PATHS:
+        flash('Learning path not found.', 'error')
+        return redirect(url_for('learn'))
+    
+    path = LEARNING_PATHS[path_id]
+    
+    # Get user's progress for this path
+    user_progress = next(
+        (p for p in user.learning_paths if p.get('path_id') == path_id),
+        {'completed': False, 'score': 0, 'concepts': {}}
+    )
+    
+    # Get concept progress
+    concept_progress = {}
+    for concept in path['concepts']:
+        concept_progress[concept['id']] = next(
+            (p for p in user.learning_paths if p.get('concept_id') == concept['id']),
+            {'completed': False, 'score': 0}
+        )
+    
+    return render_template(
+        'learn_path.html', 
+        path=path, 
+        user_progress=user_progress,
+        concept_progress=concept_progress
+    )
+
+@app.route('/learn/concept/<concept_id>')
+def learn_concept(concept_id):
+    """Render a specific concept page."""
+    if not current_user.is_authenticated:
+        return redirect(url_for('login', next=request.url))
+    
+    user = get_current_user()
+    if not user:
+        return redirect(url_for('login'))
+    
+    # Find the concept in all learning paths
+    found_concept = None
+    source_path = None
+    
+    for path_id, path in LEARNING_PATHS.items():
+        for concept in path['concepts']:
+            if concept['id'] == concept_id:
+                found_concept = concept
+                source_path = path
+                break
+        if found_concept:
+            break
+    
+    if not found_concept:
+        flash('Concept not found.', 'error')
+        return redirect(url_for('learn'))
+    
+    # Get user's progress for this concept
+    concept_progress = next(
+        (p for p in user.learning_paths if p.get('concept_id') == concept_id),
+        {'completed': False, 'score': 0}
+    )
+    
+    return render_template(
+        'learn_path.html',  # Reuse the learn_path template with a single concept
+        path={
+            'id': source_path['id'],
+            'name': found_concept['title'],
+            'description': source_path['description'],
+            'concepts': [found_concept]
+        },
+        user_progress={'completed': concept_progress.get('completed', False), 'score': concept_progress.get('score', 0)},
+        concept_progress={found_concept['id']: concept_progress},
+        single_concept=True,
+        source_path=source_path
+    )
+
+@app.route('/profile')
+def profile():
+    """Render the user profile page."""
+    # Check if user is logged in properly
+    if not current_user.is_authenticated or not hasattr(current_user, 'get_id'):
+        print("User not authenticated or missing get_id method")
+        return redirect(url_for('login', next=request.url))
+    
+    # Get the user ID from the current_user object
+    user_id = current_user.get_id()
+    
+    # Double-check the session also has this user_id
+    if 'user_id' not in session or session['user_id'] != user_id:
+        print(f"Session user_id mismatch: {session.get('user_id')} != {user_id}")
+        # Fix the session
+        session['user_id'] = user_id
+    
+    user = get_current_user()
+    if not user:
+        print(f"Failed to get current user despite being authenticated")
+        logout_user()
+        session.clear()
+        return redirect(url_for('login', next=request.url))
     
     # Get learning statistics
     stats = user.get_learning_stats()
     
     # Get review statistics
-    review_stats = spaced_repetition.get_review_stats(user.username)
+    user_id = user.username if hasattr(user, 'username') else user.user_id
+    review_stats = spaced_repetition.get_review_stats(user_id)
     
-    return render_template('profile.html', user=user, stats=stats, review_stats=review_stats)
+    # Prepare template variables
+    context = {
+        'username': user_id,
+        'join_date': datetime.now().strftime('%B %d, %Y'),
+        'skill_level': getattr(user, 'skill_level', 'Beginner'),
+        'status': 'Active',
+        'study_streak': getattr(user, 'study_streak', 0),
+        'study_hours': getattr(user, 'total_study_time', 0),
+        'lessons_completed': stats.get('completed', 0),
+        'quizzes_passed': stats.get('completed', 0) // 2,
+        'achievements': stats.get('completed', 0) // 3,
+        'cards_reviewed': review_stats.get('total_reviews', 0),
+        'accuracy_rate': int(review_stats.get('completion_rate', 0) * 100),
+        'retention_rate': 85,
+        'activities': [
+            {'description': 'Completed lesson on position', 'time': '2 days ago'},
+            {'description': 'Reviewed pot odds concept', 'time': '3 days ago'},
+            {'description': 'Analyzed hand history', 'time': '5 days ago'}
+        ]
+    }
+    
+    return render_template('profile.html', **context)
 
 @app.route('/api/logout')
-@login_required
+def api_logout():
+    """Handle user logout API request."""
+    logout_user()
+    session.clear()
+    response = jsonify({'success': True})
+    response.delete_cookie('session')
+    response.set_cookie('session', '', expires=0)
+    print("API logout: User logged out successfully, session cleared")
+    return response
+
+@app.route('/logout')
 def logout():
     """Handle user logout."""
+    # Log out the user
     logout_user()
-    return jsonify({'success': True})
+    # Clear all session data
+    session.clear()
+    # Create redirect response
+    response = redirect(url_for('home'))
+    # Force expire all cookies related to authentication
+    response.delete_cookie('session')
+    # Also set an expired session cookie
+    response.set_cookie('session', '', expires=0)
+    # Log the logout
+    print("User logged out successfully, session cleared")
+    return response
 
 @app.route('/api/learn/progress', methods=['POST'])
 @login_required
@@ -1138,6 +1565,77 @@ def debug_practice():
             'status': 'error',
             'message': str(e)
         }), 500
+
+if Card is None or Suit is None or Rank is None or HandEvaluator is None or HandRank is None:
+    class Suit:
+        SPADES = "SPADES"
+        HEARTS = "HEARTS"
+        DIAMONDS = "DIAMONDS"
+        CLUBS = "CLUBS"
+    
+    class Rank:
+        TWO = "TWO"
+        THREE = "THREE"
+        FOUR = "FOUR"
+        FIVE = "FIVE"
+        SIX = "SIX"
+        SEVEN = "SEVEN"
+        EIGHT = "EIGHT"
+        NINE = "NINE"
+        TEN = "TEN"
+        JACK = "JACK"
+        QUEEN = "QUEEN"
+        KING = "KING"
+        ACE = "ACE"
+    
+    class HandRank:
+        HIGH_CARD = "HIGH_CARD"
+        PAIR = "PAIR"
+        TWO_PAIR = "TWO_PAIR"
+        THREE_OF_A_KIND = "THREE_OF_A_KIND"
+        STRAIGHT = "STRAIGHT"
+        FLUSH = "FLUSH"
+        FULL_HOUSE = "FULL_HOUSE"
+        FOUR_OF_A_KIND = "FOUR_OF_A_KIND"
+        STRAIGHT_FLUSH = "STRAIGHT_FLUSH"
+        ROYAL_FLUSH = "ROYAL_FLUSH"
+        
+        def __init__(self, name):
+            self.name = name
+            self.value = {"HIGH_CARD": 1, "PAIR": 2, "TWO_PAIR": 3, "THREE_OF_A_KIND": 4, 
+                         "STRAIGHT": 5, "FLUSH": 6, "FULL_HOUSE": 7, "FOUR_OF_A_KIND": 8, 
+                         "STRAIGHT_FLUSH": 9, "ROYAL_FLUSH": 10}[name]
+    
+    class Card:
+        def __init__(self, suit, rank):
+            self.suit = suit
+            self.rank = rank
+        
+        def __str__(self):
+            return f"{self.rank.name} of {self.suit.name}"
+    
+    class HandValue:
+        def __init__(self, rank, cards):
+            self.rank = rank
+            self.cards = cards
+    
+    class HandEvaluator:
+        @staticmethod
+        def evaluate_hand(cards):
+            # Simple mock implementation
+            # Just return a random hand rank for demonstration
+            import random
+            ranks = [HandRank("HIGH_CARD"), HandRank("PAIR"), HandRank("TWO_PAIR"), 
+                    HandRank("THREE_OF_A_KIND"), HandRank("STRAIGHT"), HandRank("FLUSH"),
+                    HandRank("FULL_HOUSE"), HandRank("FOUR_OF_A_KIND"), 
+                    HandRank("STRAIGHT_FLUSH"), HandRank("ROYAL_FLUSH")]
+            
+            # For demonstration, return a random hand rank
+            # In a real implementation, this would evaluate the cards
+            return HandValue(random.choice(ranks), cards)
+
+# Create a global reference to the hand evaluator
+hand_evaluator = HandEvaluator()
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001) 

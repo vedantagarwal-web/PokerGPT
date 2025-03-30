@@ -577,7 +577,7 @@
         
         <div class="quiz-container">
             <div class="progress-indicator">
-                <div class="progress-text">Question <span id="current-question">1</span> of <span id="total-questions">5</span></div>
+                <div class="progress-text">Question <span id="current-question">1</span> of <span id="total-questions">{{ lesson.quiz_questions|length }}</span></div>
                 <div class="progress-text"><span id="correct-answers">0</span> correct</div>
             </div>
             
@@ -586,28 +586,8 @@
             </div>
             
             <div id="quiz-questions">
-                <!-- Quiz questions will be dynamically loaded -->
-                {% for question in lesson.quiz_questions|default([
-                    {
-                        'question': 'Which position at the poker table has the most significant advantage?',
-                        'options': ['UTG', 'MP', 'CO', 'BTN', 'BB'],
-                        'answer': 'BTN',
-                        'explanation': 'The button (BTN) has the most significant advantage because it acts last on all post-flop streets, giving the player maximum information before making decisions.'
-                    },
-                    {
-                        'question': 'What are pot odds?',
-                        'options': [
-                            'The odds of making your hand by the river',
-                            'The relationship between the pot size and the cost of a call',
-                            'The percentage of pots you win at showdown',
-                            'The ratio of big blinds to your stack size',
-                            'The probability of being dealt a premium hand'
-                        ],
-                        'answer': 'The relationship between the pot size and the cost of a call',
-                        'explanation': 'Pot odds refer to the relationship between the current pot size and the cost of a contemplated call. They help determine if a call is mathematically profitable based on your equity in the hand.'
-                    }
-                ]) %}
-                <div class="quiz-question" {% if not loop.first %}style="display:none"{% endif %} data-question-index="{{ loop.index0 }}">
+                {% for question in lesson.quiz_questions %}
+                <div class="quiz-question" {% if not loop.first %}style="display:none"{% endif %} data-question-index="{{ loop.index0 }}" data-correct-answer="{{ question.answer }}">
                     <div class="question-text">{{ question.question }}</div>
                     <div class="quiz-options">
                         {% for option in question.options %}
@@ -617,22 +597,27 @@
                         </div>
                         {% endfor %}
                     </div>
-                    <div class="quiz-explanation">{{ question.explanation }}</div>
+                    <div class="quiz-explanation" style="display: none;">{{ question.explanation }}</div>
                 </div>
                 {% endfor %}
             </div>
             
-            <div class="quiz-actions">
-                <button class="quiz-button check-answer" id="check-answer">Check Answer</button>
-                <button class="quiz-button next-question" id="next-question">Next Question</button>
-                <button class="quiz-button reset-quiz" id="reset-quiz">Reset Quiz</button>
+            <div class="quiz-buttons">
+                <button id="check-answer" class="quiz-button">Check Answer</button>
+                <button id="next-question" class="quiz-button next-button">Next Question</button>
             </div>
             
             <div class="completion-message">
-                <div class="completion-title">
-                    <i class="fas fa-trophy"></i> Quiz Completed!
+                <div class="completion-icon"><i class="fas fa-check-circle"></i></div>
+                <h3 class="completion-title">Quiz Completed!</h3>
+                <p class="completion-score">You got <span id="final-score">0</span> out of <span id="final-total">{{ lesson.quiz_questions|length }}</span> correct.</p>
+                <p class="completion-feedback">Great job! Keep practicing to improve your poker skills.</p>
+                <div class="completion-buttons">
+                    <button id="complete-lesson" class="quiz-button complete-button">Mark Lesson as Complete</button>
+                    {% if index < path.lessons|length - 1 %}
+                    <a href="/lesson?path={{ path_id }}&index={{ index + 1 }}" id="go-to-next-lesson" class="quiz-button next-lesson-button" style="display: none;">Go to Next Lesson</a>
+                    {% endif %}
                 </div>
-                <p class="completion-text">Great job! You've completed the quiz and demonstrated your understanding of this concept. Continue to the next lesson or try the practice exercises to further reinforce your knowledge.</p>
             </div>
         </div>
     </div>
@@ -670,19 +655,24 @@
         const quizQuestions = document.querySelectorAll('.quiz-question');
         const checkAnswerBtn = document.getElementById('check-answer');
         const nextQuestionBtn = document.getElementById('next-question');
-        const resetQuizBtn = document.getElementById('reset-quiz');
+        const completeButton = document.getElementById('complete-lesson');
+        const nextLessonButton = document.getElementById('go-to-next-lesson');
         const progressBar = document.querySelector('.progress-bar');
         const currentQuestionSpan = document.getElementById('current-question');
         const totalQuestionsSpan = document.getElementById('total-questions');
         const correctAnswersSpan = document.getElementById('correct-answers');
         const completionMessage = document.querySelector('.completion-message');
+        const finalScoreSpan = document.getElementById('final-score');
+        const finalTotalSpan = document.getElementById('final-total');
         
         let currentQuestionIndex = 0;
         let selectedOptionIndex = null;
         let correctAnswers = 0;
+        let userAnswers = [];
         const totalQuestions = quizQuestions.length;
         
         totalQuestionsSpan.textContent = totalQuestions;
+        finalTotalSpan.textContent = totalQuestions;
         
         // Set up option selection
         document.querySelectorAll('.quiz-option').forEach(option => {
@@ -707,19 +697,24 @@
                 return;
             }
             
-            // Define the correct answer (in a real implementation, this would come from the server)
-            const correctIndex = 0; // For demonstration, we'll say the first option is always correct
+            // Store user's answer
+            userAnswers[currentQuestionIndex] = options[selectedOptionIndex].querySelector('.option-text').textContent.trim();
+            
+            // Get the correct answer from the question data attribute
+            const correctAnswer = currentQuestion.getAttribute('data-correct-answer');
+            const options_list = Array.from(options).map(option => option.querySelector('.option-text').textContent.trim());
+            const correctIndex = options_list.indexOf(correctAnswer);
             
             options.forEach((option, index) => {
                 if (index === correctIndex) {
                     option.classList.add('correct');
-                } else if (index === selectedOptionIndex) {
+                } else if (index === selectedOptionIndex && index !== correctIndex) {
                     option.classList.add('incorrect');
                 }
             });
             
             // Show explanation
-            explanation.classList.add('visible');
+            explanation.style.display = 'block';
             
             // Show next question button
             checkAnswerBtn.style.display = 'none';
@@ -756,46 +751,68 @@
                 // Quiz completed
                 nextQuestionBtn.style.display = 'none';
                 completionMessage.classList.add('visible');
+                finalScoreSpan.textContent = correctAnswers;
                 
                 // Update progress bar to 100%
                 progressBar.style.width = '100%';
+                
+                // Submit quiz results to the server
+                submitQuizResults();
             }
         });
         
-        // Reset quiz button
-        resetQuizBtn.addEventListener('click', function() {
-            // Reset all states
-            currentQuestionIndex = 0;
-            selectedOptionIndex = null;
-            correctAnswers = 0;
-            correctAnswersSpan.textContent = '0';
-            currentQuestionSpan.textContent = '1';
-            progressBar.style.width = '0%';
-            
-            // Hide all questions except the first
-            quizQuestions.forEach((question, index) => {
-                question.style.display = index === 0 ? 'block' : 'none';
-                
-                // Reset options
-                question.querySelectorAll('.quiz-option').forEach(option => {
-                    option.classList.remove('selected', 'correct', 'incorrect');
-                });
-                
-                // Hide explanations
-                question.querySelector('.quiz-explanation').classList.remove('visible');
+        // Submit quiz results to the server
+        function submitQuizResults() {
+            fetch('/api/learn/submit_quiz', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    path_id: '{{ path_id }}',
+                    lesson_index: {{ index }},
+                    answers: userAnswers
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Quiz submitted successfully');
+                    // Additional actions based on quiz results could be added here
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting quiz:', error);
             });
-            
-            // Reset buttons
-            nextQuestionBtn.classList.remove('visible');
-            checkAnswerBtn.style.display = 'block';
-            
-            // Hide completion message
-            completionMessage.classList.remove('visible');
-        });
+        }
         
-        // Mark as complete button
-        document.getElementById('complete-lesson').addEventListener('click', function() {
-            alert('Lesson marked as complete! This would update your progress in a real implementation.');
+        // Mark lesson as complete
+        completeButton.addEventListener('click', function() {
+            fetch('/api/learn/complete_lesson', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    path_id: '{{ path_id }}',
+                    lesson_index: {{ index }}
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    completeButton.textContent = 'Lesson Completed!';
+                    completeButton.disabled = true;
+                    
+                    // Show next lesson button if available
+                    if (nextLessonButton) {
+                        nextLessonButton.style.display = 'inline-block';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error completing lesson:', error);
+            });
         });
     });
 </script>

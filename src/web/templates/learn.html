@@ -350,77 +350,29 @@
     </div>
 
     <div class="learning-paths">
-        <!-- Beginner Paths -->
-        <div class="path-card" data-level="beginner">
-            <div class="path-header">
-                <div class="path-icon">
-                    <i class="fas fa-chess-board"></i>
+        {% for path in learning_paths %}
+            <div class="path-card" data-level="{{ 'beginner' if 'beginner' in path.name.lower() else 'intermediate' if 'intermediate' in path.name.lower() else 'advanced' if 'advanced' in path.name.lower() else 'beginner' }}">
+                <div class="path-header">
+                    <div class="path-icon">
+                        <i class="fas fa-{{ {'preflop': 'chess-board', 'postflop': 'brain', 'gto': 'chart-network', 'poker_math': 'calculator', 'exploitative_play': 'chess-knight', 'tournament_strategy': 'trophy'}[path.id] }}"></i>
+                    </div>
+                    <h3 class="path-title">{{ path.name }}</h3>
                 </div>
-                <h3 class="path-title">Fundamentals of Poker</h3>
-            </div>
-            <p class="path-description">Master the essential concepts that form the foundation of profitable poker play. This path focuses on position, pot odds, and basic preflop strategy.</p>
-            <div class="path-details">
-                <ul class="path-concepts">
-                    <li class="path-concept">Position and its importance</li>
-                    <li class="path-concept">Pot odds and basic math</li>
-                    <li class="path-concept">Preflop hand selection</li>
-                    <li class="path-concept">Basic postflop strategy</li>
-                </ul>
-            </div>
-            <div class="path-stats">
-                <span>8 lessons</span>
-                <span>Beginner friendly</span>
-            </div>
-            <button class="start-button" data-path="fundamentals">Start Learning</button>
-        </div>
-
-        <!-- Intermediate Paths -->
-        <div class="path-card" data-level="intermediate">
-            <div class="path-header">
-                <div class="path-icon">
-                    <i class="fas fa-brain"></i>
+                <p class="path-description">{{ path.description }}</p>
+                <div class="path-details">
+                    <ul class="path-concepts">
+                        {% for concept in path.concepts %}
+                            <li class="path-concept">{{ concept.title }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
-                <h3 class="path-title">Advanced Strategies</h3>
-            </div>
-            <p class="path-description">Build on the fundamentals with more advanced concepts. Learn to read board textures, size bets optimally, and develop a deeper understanding of hand reading.</p>
-            <div class="path-details">
-                <ul class="path-concepts">
-                    <li class="path-concept">Board texture analysis</li>
-                    <li class="path-concept">Advanced bet sizing</li>
-                    <li class="path-concept">Hand reading techniques</li>
-                    <li class="path-concept">Multi-street planning</li>
-                </ul>
-            </div>
-            <div class="path-stats">
-                <span>10 lessons</span>
-                <span>Intermediate level</span>
-            </div>
-            <button class="start-button" data-path="advanced_strategy">Start Learning</button>
-        </div>
-
-        <!-- Advanced Paths -->
-        <div class="path-card" data-level="advanced">
-            <div class="path-header">
-                <div class="path-icon">
-                    <i class="fas fa-chart-network"></i>
+                <div class="path-stats">
+                    <span>{{ path.concepts|length }} concepts</span>
+                    <span>{{ user_progress[path.id].score }}% complete</span>
                 </div>
-                <h3 class="path-title">GTO Poker Theory</h3>
+                <a href="{{ url_for('learn_path', path_id=path.id) }}" class="start-button">Start Learning</a>
             </div>
-            <p class="path-description">Dive into Game Theory Optimal concepts and equilibrium strategies. Learn about balanced ranges, exploitation, and advanced mathematical concepts in poker.</p>
-            <div class="path-details">
-                <ul class="path-concepts">
-                    <li class="path-concept">GTO fundamentals</li>
-                    <li class="path-concept">Range construction</li>
-                    <li class="path-concept">Exploitative adjustments</li>
-                    <li class="path-concept">Advanced solvers usage</li>
-                </ul>
-            </div>
-            <div class="path-stats">
-                <span>12 lessons</span>
-                <span>Advanced concepts</span>
-            </div>
-            <button class="start-button" data-path="gto_theory">Start Learning</button>
-        </div>
+        {% endfor %}
     </div>
 
     <div class="concepts-section">
@@ -438,7 +390,7 @@
                 <p class="concept-explanation">
                     Position refers to where you sit relative to the dealer button, which determines when you act during the hand. Acting later gives you an information advantage, allowing you to make better decisions than players who act before you.
                 </p>
-                <a href="/learn/concept/position" class="concept-learn-more">Learn more →</a>
+                <a href="/learn/concept/positions" class="concept-learn-more">Learn more →</a>
             </div>
 
             <div class="concept-card">
@@ -460,7 +412,7 @@
                 <p class="concept-explanation">
                     Preflop ranges are collections of hands you would play in specific situations. They vary by position, with tighter ranges in early positions and wider ranges in late positions. Understanding optimal ranges is crucial for preflop decision-making.
                 </p>
-                <a href="/learn/concept/preflop_ranges" class="concept-learn-more">Learn more →</a>
+                <a href="/learn/concept/starting_hands" class="concept-learn-more">Learn more →</a>
             </div>
 
             <div class="concept-card">
@@ -471,7 +423,7 @@
                 <p class="concept-explanation">
                     Board texture refers to how the community cards interact with potential hand ranges. Wet boards have many straight and flush possibilities, while dry boards have few drawing possibilities. The texture affects optimal betting strategies.
                 </p>
-                <a href="/learn/concept/board_texture" class="concept-learn-more">Learn more →</a>
+                <a href="/learn/concept/betting" class="concept-learn-more">Learn more →</a>
             </div>
 
             <div class="concept-card">
@@ -493,7 +445,7 @@
                 <p class="concept-explanation">
                     Game Theory Optimal (GTO) play aims to create a balanced strategy that can't be exploited, regardless of what your opponents do. It involves playing with the right frequency of value bets and bluffs to make opponents indifferent between options.
                 </p>
-                <a href="/learn/concept/gto_basics" class="concept-learn-more">Learn more →</a>
+                <a href="/learn/concept/ranges" class="concept-learn-more">Learn more →</a>
             </div>
         </div>
     </div>

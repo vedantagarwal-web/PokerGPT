@@ -1,0 +1,385 @@
+from flask import Blueprint, jsonify, request, render_template, session
+from .curriculum import Curriculum
+from .ai_coach import PokerCoach
+from typing import Dict
+import json
+import os
+
+bp = Blueprint('routes', __name__)
+curriculum = Curriculum()
+coach = PokerCoach()
+
+# @bp.route('/learn')
+# def learn():
+#     """Render the learning dashboard."""
+#     return render_template('learn.html')
+
+@bp.route('/learn/<path_id>')
+def learn_path(path_id):
+    """Render a specific learning path."""
+    path = curriculum.get_path(path_id)
+    if not path:
+        return render_template('learn.html', error=f"Learning path '{path_id}' not found")
+    
+    # Get user's completed lessons from session
+    if 'completed_lessons' not in session:
+        session['completed_lessons'] = {}
+    
+    if path_id not in session['completed_lessons']:
+        session['completed_lessons'][path_id] = []
+    
+    completed_lessons = session['completed_lessons'][path_id]
+    
+    return render_template('learn_path.html', 
+                          path=path, 
+                          path_id=path_id, 
+                          completed_lessons=completed_lessons)
+
+@bp.route('/lesson')
+def lesson():
+    """Render a specific lesson."""
+    path_id = request.args.get('path')
+    lesson_index = request.args.get('index')
+    
+    if not path_id:
+        return render_template('learn.html', error="Missing path parameter")
+    
+    path = curriculum.get_path(path_id)
+    if not path:
+        return render_template('learn.html', error="Learning path not found")
+    
+    # If lesson index is not provided, get it from the lesson_name
+    if not lesson_index:
+        lesson_name = request.args.get('lesson')
+        if not lesson_name:
+            # Default to first lesson if no lesson specified
+            lesson_index = 0
+        else:
+            # Find the lesson by name
+            lesson_index = next((i for i, lesson in enumerate(path['lessons']) 
+                            if lesson['title'].lower().replace(' ', '_') == lesson_name), 0)
+    else:
+        lesson_index = int(lesson_index)
+    
+    lesson = curriculum.get_lesson(path_id, lesson_index)
+    if not lesson:
+        return render_template('learn.html', error="Lesson not found")
+    
+    # Calculate next and previous lesson indices
+    next_lesson = None
+    prev_lesson = None
+    
+    if lesson_index < len(path['lessons']) - 1:
+        next_lesson = {
+            'index': lesson_index + 1,
+            'title': path['lessons'][lesson_index + 1]['title']
+        }
+    
+    if lesson_index > 0:
+        prev_lesson = {
+            'index': lesson_index - 1,
+            'title': path['lessons'][lesson_index - 1]['title']
+        }
+    
+    # Get user's completed lessons (this would typically come from a database)
+    # For now, we'll simulate with a session variable
+    if 'completed_lessons' not in session:
+        session['completed_lessons'] = {}
+    
+    if path_id not in session['completed_lessons']:
+        session['completed_lessons'][path_id] = []
+    
+    completed_lessons = session['completed_lessons'][path_id]
+    
+    return render_template('lesson.html', 
+                          path=path, 
+                          lesson=lesson,
+                          index=lesson_index, 
+                          path_id=path_id,
+                          next_lesson=next_lesson,
+                          prev_lesson=prev_lesson,
+                          completed_lessons=completed_lessons)
+
+@bp.route('/api/learn/paths')
+def get_learning_paths():
+    """Get available learning paths for a skill level."""
+    level = request.args.get('level', 'beginner')
+    paths = curriculum.get_paths_by_level(level)
+    return jsonify(paths)
+
+@bp.route('/api/learn/start', methods=['POST'])
+def start_learning_path():
+    """Start or continue a learning path."""
+    data = request.get_json()
+    path_id = data.get('path')
+    level = data.get('level', 'beginner')
+    
+    path = curriculum.get_path(path_id)
+    if not path:
+        return jsonify({'error': 'Path not found'}), 404
+    
+    # Here you would typically save the user's progress
+    return jsonify({
+        'path_id': path_id,
+        'first_lesson': path['lessons'][0]
+    })
+
+@bp.route('/api/learn/lesson/<path_id>/<int:lesson_index>')
+def get_lesson(path_id: str, lesson_index: int):
+    """Get a specific lesson's content."""
+    lesson = curriculum.get_lesson(path_id, lesson_index)
+    if not lesson:
+        return jsonify({'error': 'Lesson not found'}), 404
+    return jsonify(lesson)
+
+@bp.route('/api/learn/complete_lesson', methods=['POST'])
+def complete_lesson():
+    """Mark a lesson as completed."""
+    data = request.get_json()
+    path_id = data.get('path_id')
+    lesson_index = data.get('lesson_index')
+    
+    if not path_id or lesson_index is None:
+        return jsonify({'error': 'Missing required parameters'}), 400
+    
+    # Validate the path and lesson exist
+    path = curriculum.get_path(path_id)
+    if not path or not (0 <= lesson_index < len(path['lessons'])):
+        return jsonify({'error': 'Invalid path or lesson'}), 404
+    
+    # Initialize session variables if needed
+    if 'completed_lessons' not in session:
+        session['completed_lessons'] = {}
+    
+    if path_id not in session['completed_lessons']:
+        session['completed_lessons'][path_id] = []
+    
+    # Add lesson to completed list if not already there
+    if lesson_index not in session['completed_lessons'][path_id]:
+        session['completed_lessons'][path_id].append(lesson_index)
+        session.modified = True
+    
+    # Get next lesson if available
+    next_lesson = None
+    if lesson_index < len(path['lessons']) - 1:
+        next_lesson = {
+            'index': lesson_index + 1,
+            'title': path['lessons'][lesson_index + 1]['title']
+        }
+    
+    return jsonify({
+        'success': True,
+        'completed_lessons': session['completed_lessons'][path_id],
+        'next_lesson': next_lesson
+    })
+
+@bp.route('/api/learn/submit_quiz', methods=['POST'])
+def submit_quiz():
+    """Submit quiz answers and get results."""
+    data = request.get_json()
+    path_id = data.get('path_id')
+    lesson_index = data.get('lesson_index')
+    answers = data.get('answers', [])
+    
+    if not path_id or lesson_index is None or not answers:
+        return jsonify({'error': 'Missing required parameters'}), 400
+    
+    # Get the lesson and quiz questions
+    lesson = curriculum.get_lesson(path_id, int(lesson_index))
+    if not lesson or 'quiz_questions' not in lesson:
+        return jsonify({'error': 'Lesson or quiz not found'}), 404
+    
+    quiz_questions = lesson['quiz_questions']
+    
+    # Validate and score answers
+    results = []
+    correct_count = 0
+    
+    for i, answer in enumerate(answers):
+        if i >= len(quiz_questions):
+            break
+            
+        question = quiz_questions[i]
+        is_correct = answer == question['answer']
+        
+        if is_correct:
+            correct_count += 1
+            
+        results.append({
+            'question_index': i,
+            'is_correct': is_correct,
+            'correct_answer': question['answer'],
+            'explanation': question['explanation']
+        })
+    
+    # Calculate score
+    score = 0
+    if len(answers) > 0:
+        score = (correct_count / len(answers)) * 100
+    
+    return jsonify({
+        'success': True,
+        'results': results,
+        'score': score,
+        'correct_count': correct_count,
+        'total_questions': len(answers)
+    })
+
+@bp.route('/api/coach/advice', methods=['POST'])
+def get_coach_advice():
+    """Get personalized coaching advice."""
+    data = request.get_json()
+    game_state: Dict = data.get('game_state', {})
+    question: str = data.get('question', '')
+    context: str = data.get('context', 'general')
+    skill_level: str = data.get('skill_level', 'intermediate')
+    
+    try:
+        advice = coach.get_coaching_advice(
+            game_state=game_state,
+            question=question,
+            context=context,
+            skill_level=skill_level
+        )
+        return jsonify({'advice': advice})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@bp.route('/api/coach/analyze', methods=['POST'])
+def analyze_hand():
+    """Analyze a complete hand history."""
+    data = request.get_json()
+    hand_history = data.get('hand_history', [])
+    focus_area = data.get('focus_area')
+    
+    try:
+        analysis = coach.analyze_hand_history(
+            hand_history=hand_history,
+            focus_area=focus_area
+        )
+        return jsonify({'analysis': analysis})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@bp.route('/api/coach/session', methods=['POST'])
+def start_coach_session():
+    """Start a new AI coaching session."""
+    data = request.get_json()
+    skill_level = data.get('skill_level', 'intermediate')
+    
+    # Here you would typically create a new coaching session
+    session_id = 'new_session'  # Generate a real session ID
+    
+    return jsonify({
+        'session_id': session_id,
+        'skill_level': skill_level
+    })
+
+@bp.route('/api/poker-coach/advice', methods=['POST'])
+def get_poker_advice():
+    """Get advice from the poker coach."""
+    try:
+        data = request.json
+        if not data:
+            return jsonify({'advice': 'I need more information to provide advice. Please include position, phase, and other game details.'}), 200
+        
+        # Get advice from AI coach
+        advice = coach.get_advice(
+            position=data.get('position', 'CO'),
+            phase=data.get('phase', 'preflop'),
+            pot=data.get('pot', 0),
+            current_bet=data.get('current_bet', 0),
+            player_cards=data.get('player_cards', []),
+            community_cards=data.get('community_cards', []),
+            bets=data.get('bets', {})
+        )
+        
+        # Determine related concept based on position and phase
+        related_concept = None
+        phase = data.get('phase', 'preflop')
+        if phase == 'preflop':
+            related_concept = 'preflop_ranges'
+        elif phase in ['flop', 'turn', 'river']:
+            related_concept = 'postflop_play'
+        
+        return jsonify({
+            'advice': advice,
+            'related_concept': related_concept
+        })
+    except Exception as e:
+        return jsonify({
+            'advice': 'Sorry, I encountered an error generating advice. For preflop play, focus on position and hand strength. In later positions, you can play more hands profitably.',
+            'related_concept': 'position'
+        }), 200
+
+@bp.route('/api/learning-path/<skill_level>')
+def get_learning_path(skill_level):
+    """Get learning path for a skill level."""
+    try:
+        # Get learning path for skill level
+        concepts = coach.get_learning_path(skill_level)
+        
+        # Get concept details
+        concept_details = []
+        for concept_id in concepts:
+            concept = coach.knowledge_base['concepts'].get(concept_id)
+            if concept:
+                concept_details.append({
+                    'id': concept_id,
+                    'name': concept['name'],
+                    'difficulty': concept['difficulty'],
+                    'prerequisites': concept['prerequisites']
+                })
+        
+        return jsonify({
+            'concepts': concept_details
+        })
+    except Exception as e:
+        # Return basic concepts for fallback
+        return jsonify({
+            'concepts': [
+                {
+                    'id': 'position',
+                    'name': 'Position',
+                    'difficulty': 'beginner',
+                    'prerequisites': []
+                },
+                {
+                    'id': 'pot_odds',
+                    'name': 'Pot Odds',
+                    'difficulty': 'beginner',
+                    'prerequisites': ['position']
+                },
+                {
+                    'id': 'preflop_ranges',
+                    'name': 'Preflop Ranges',
+                    'difficulty': 'intermediate',
+                    'prerequisites': ['position', 'pot_odds']
+                }
+            ]
+        }), 200
+
+@bp.route('/api/concept/<concept_id>')
+def get_concept_details(concept_id):
+    """Get details of a specific concept."""
+    try:
+        # Get concept details from knowledge base
+        concept = coach.knowledge_base['concepts'].get(concept_id)
+        
+        if concept:
+            return jsonify({
+                'id': concept_id,
+                'name': concept['name'],
+                'difficulty': concept['difficulty'],
+                'prerequisites': concept['prerequisites'],
+                'explanations': concept['explanations']
+            })
+        else:
+            return jsonify({'error': 'Concept not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@bp.route('/practice')
+def practice():
+    """Render the practice page."""
+    return render_template('practice.html') 

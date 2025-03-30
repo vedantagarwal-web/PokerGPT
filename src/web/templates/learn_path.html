@@ -37,413 +37,300 @@
 
     .path-title-section {
         text-align: center;
+        margin-bottom: 3rem;
     }
 
     .path-title {
         color: #FFC107;
         font-size: 2.2rem;
-        margin-bottom: 0.8rem;
+        margin-bottom: 1rem;
     }
 
     .path-description {
         color: #94A3B8;
         font-size: 1.1rem;
         max-width: 800px;
-        margin: 0 auto 1.5rem auto;
+        margin: 0 auto;
         line-height: 1.6;
     }
 
-    .path-meta {
+    .concepts-list {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         gap: 2rem;
-        margin-top: 1.5rem;
-        color: #CBD5E1;
     }
 
-    .path-meta-item {
-        display: flex;
-        align-items: center;
-        font-size: 0.9rem;
-    }
-
-    .path-meta-item i {
-        margin-right: 0.5rem;
-        color: #FFC107;
-    }
-
-    .progress-container {
+    .concept-card {
         background: rgba(30, 41, 59, 0.8);
         border-radius: 1rem;
-        padding: 1.5rem;
-        margin-bottom: 3rem;
+        overflow: hidden;
         border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .progress-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    .concept-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .concept-header {
+        background: rgba(15, 23, 42, 0.6);
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .concept-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #F8FAFC;
+        margin-bottom: 0.5rem;
+    }
+
+    .concept-description {
+        color: #94A3B8;
+        font-size: 1rem;
+    }
+
+    .concept-content {
+        padding: 1.5rem;
+    }
+
+    .concept-content h4 {
+        color: #FFC107;
+        margin-top: 0;
         margin-bottom: 1rem;
     }
 
-    .progress-title {
-        color: #F8FAFC;
-        font-size: 1.2rem;
-        font-weight: 600;
+    .concept-content p {
+        color: #CBD5E1;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
     }
 
-    .progress-percentage {
+    .concept-content ul {
+        color: #CBD5E1;
+        padding-left: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .concept-content li {
+        margin-bottom: 0.5rem;
+    }
+
+    .concept-content strong {
         color: #FFC107;
-        font-weight: 600;
-        font-size: 1.1rem;
     }
 
-    .progress-bar-container {
-        height: 8px;
-        background: rgba(15, 23, 42, 0.6);
-        border-radius: 4px;
-        overflow: hidden;
-    }
-
-    .progress-bar {
-        height: 100%;
-        background: #4CAF50;
-        width: 0%;
-        transition: width 0.3s ease;
-    }
-
-    .path-sections {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-
-    .path-section {
-        background: rgba(30, 41, 59, 0.8);
-        border-radius: 1rem;
-        overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .section-header {
-        padding: 1.5rem;
-        background: rgba(15, 23, 42, 0.6);
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    .section-number {
-        width: 36px;
-        height: 36px;
-        background: #FFC107;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        margin-right: 1.2rem;
-        color: #1a1a1a;
-    }
-
-    .section-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #F8FAFC;
-        flex: 1;
-    }
-
-    .section-expand {
-        color: #94A3B8;
-        transition: transform 0.3s ease;
-    }
-
-    .section-header.active .section-expand {
-        transform: rotate(180deg);
-    }
-
-    .section-content {
-        padding: 0;
-        max-height: 0;
-        overflow: hidden;
-        transition: all 0.3s ease;
-    }
-
-    .section-header.active + .section-content {
-        padding: 1.5rem;
-        max-height: 1000px;
-    }
-
-    .lessons-list {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .lesson-card {
+    .quiz-section {
+        margin-top: 2rem;
         background: rgba(15, 23, 42, 0.6);
         border-radius: 0.5rem;
         padding: 1.5rem;
-        transition: transform 0.3s ease;
-        display: flex;
-        align-items: center;
     }
 
-    .lesson-card:hover {
-        transform: translateY(-3px);
-    }
-
-    .lesson-number {
-        width: 32px;
-        height: 32px;
-        background: rgba(255, 193, 7, 0.2);
-        color: #FFC107;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .quiz-title {
+        font-size: 1.2rem;
         font-weight: 600;
-        margin-right: 1rem;
+        color: #F8FAFC;
+        margin-bottom: 1rem;
     }
 
-    .lesson-details {
+    .quiz-questions {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .quiz-question {
+        color: #CBD5E1;
+        font-weight: 500;
+        margin-bottom: 0.75rem;
+    }
+
+    .quiz-options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .quiz-option {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: rgba(30, 41, 59, 0.8);
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .quiz-option:hover {
+        background: rgba(30, 41, 59, 1);
+    }
+
+    .quiz-option input {
+        margin: 0;
+    }
+
+    .quiz-option label {
+        color: #94A3B8;
+        cursor: pointer;
         flex: 1;
     }
 
-    .lesson-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #F8FAFC;
-        margin-bottom: 0.5rem;
-    }
-
-    .lesson-description {
-        color: #94A3B8;
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .lesson-meta {
-        display: flex;
-        gap: 1.5rem;
-        font-size: 0.8rem;
-        color: #64748B;
-    }
-
-    .lesson-meta-item {
-        display: flex;
-        align-items: center;
-    }
-
-    .lesson-meta-item i {
-        margin-right: 0.3rem;
-        font-size: 0.9rem;
-    }
-
-    .lesson-status {
-        display: flex;
-        align-items: center;
-        font-size: 0.8rem;
-        padding: 0.3rem 0.6rem;
-        border-radius: 0.25rem;
+    .submit-quiz {
+        padding: 0.75rem 1.5rem;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
         font-weight: 500;
+        transition: background 0.3s ease;
     }
 
-    .status-completed {
+    .submit-quiz:hover {
+        background: #3d8b40;
+    }
+
+    .result-success {
         background: rgba(76, 175, 80, 0.2);
         color: #4CAF50;
-    }
-
-    .status-current {
-        background: rgba(33, 150, 243, 0.2);
-        color: #2196F3;
-    }
-
-    .status-locked {
-        background: rgba(158, 158, 158, 0.2);
-        color: #9E9E9E;
-    }
-
-    .start-lesson {
-        background: #2196F3;
-        color: white;
-        padding: 0.6rem 1.2rem;
+        padding: 1rem;
         border-radius: 0.5rem;
-        text-decoration: none;
-        transition: background 0.3s;
+        margin-top: 1rem;
         font-weight: 500;
-        white-space: nowrap;
-        margin-left: 1rem;
+        display: none;
     }
 
-    .start-lesson:hover {
-        background: #1976D2;
-    }
-
-    .start-lesson.disabled {
-        background: #9E9E9E;
-        cursor: not-allowed;
-        opacity: 0.7;
-    }
-
-    .continue-lesson {
-        background: #4CAF50;
-    }
-    
-    .continue-lesson:hover {
-        background: #388E3C;
-    }
-
-    .path-footer {
-        margin-top: 3rem;
-        text-align: center;
-    }
-
-    .practice-button {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.8rem 1.5rem;
-        background: #E91E63;
-        color: white;
+    .result-error {
+        background: rgba(244, 67, 54, 0.2);
+        color: #F44336;
+        padding: 1rem;
         border-radius: 0.5rem;
-        text-decoration: none;
+        margin-top: 1rem;
         font-weight: 500;
-        transition: background 0.3s;
-    }
-
-    .practice-button:hover {
-        background: #C2185B;
-    }
-
-    .practice-button i {
-        margin-right: 0.5rem;
+        display: none;
     }
 </style>
 
 <div class="path-container">
     <div class="path-header">
-        <a href="/learn" class="back-button"><i class="fas fa-arrow-left"></i> Back to Learning Paths</a>
+        <a href="{{ url_for('learn') if not single_concept|default(false) else url_for('learn_path', path_id=source_path.id) }}" class="back-button">
+            <i class="fas fa-arrow-left"></i> 
+            {% if single_concept|default(false) %}
+                Back to {{ source_path.name }}
+            {% else %}
+                Back to Learning Paths
+            {% endif %}
+        </a>
         
         <div class="path-title-section">
             <h1 class="path-title">{{ path.name }}</h1>
             <p class="path-description">{{ path.description }}</p>
-            
-            <div class="path-meta">
-                <div class="path-meta-item">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>{{ path.level|title }} level</span>
-                </div>
-                <div class="path-meta-item">
-                    <i class="fas fa-book"></i>
-                    <span>{{ path.lessons|length }} lessons</span>
-                </div>
-                <div class="path-meta-item">
-                    <i class="fas fa-clock"></i>
-                    <span>Approximately {{ path.lessons|length * 15 }} minutes</span>
-                </div>
-            </div>
         </div>
     </div>
     
-    <div class="progress-container">
-        <div class="progress-header">
-            <div class="progress-title">Your Progress</div>
-            <div class="progress-percentage">0%</div>
-        </div>
-        <div class="progress-bar-container">
-            <div class="progress-bar" style="width: 0%"></div>
-        </div>
-    </div>
-    
-    <div class="path-sections">
-        <!-- Section 1: Fundamentals -->
-        <div class="path-section">
-            <div class="section-header active">
-                <div class="section-number">1</div>
-                <div class="section-title">Core Concepts</div>
-                <div class="section-expand"><i class="fas fa-chevron-down"></i></div>
-            </div>
-            <div class="section-content">
-                <div class="lessons-list">
-                    {% for lesson in path.lessons %}
-                    {% if loop.index <= (path.lessons|length / 2)|round(0, 'ceil') %}
-                    <div class="lesson-card">
-                        <div class="lesson-number">{{ loop.index }}</div>
-                        <div class="lesson-details">
-                            <h3 class="lesson-title">{{ lesson.title }}</h3>
-                            <p class="lesson-description">{{ lesson.description|default('Master this fundamental poker concept to improve your decision-making.') }}</p>
-                            <div class="lesson-meta">
-                                <span class="lesson-meta-item">
-                                    <i class="fas fa-clock"></i> 15 min
-                                </span>
-                                <span class="lesson-meta-item">
-                                    <i class="fas fa-chart-bar"></i> {{ path.level|title }}
-                                </span>
+    <div class="concepts-list">
+        {% for concept in path.concepts %}
+            <div class="concept-card" id="concept-{{ concept.id }}">
+                <div class="concept-header">
+                    <h2 class="concept-title">{{ concept.title }}</h2>
+                </div>
+                
+                <div class="concept-content">
+                    {{ concept.content|safe }}
+                    
+                    <div class="quiz-section">
+                        <h3 class="quiz-title">Test Your Knowledge</h3>
+                        
+                        <form id="quiz-form-{{ concept.id }}" class="quiz-form">
+                            <div class="quiz-questions">
+                                {% for question in concept.questions %}
+                                    <div class="quiz-item">
+                                        <p class="quiz-question">{{ question.question }}</p>
+                                        <div class="quiz-options">
+                                            {% set question_index = loop.index0 %}
+                                            {% for option in question.options %}
+                                                <div class="quiz-option">
+                                                    <input type="radio" 
+                                                           id="concept-{{ concept.id }}-q{{ question_index }}-opt{{ loop.index }}" 
+                                                           name="question{{ question_index }}" 
+                                                           value="{{ option }}">
+                                                    <label for="concept-{{ concept.id }}-q{{ question_index }}-opt{{ loop.index }}">{{ option }}</label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
                             </div>
-                        </div>
-                        <span class="lesson-status {% if loop.index == 1 %}status-current{% else %}status-locked{% endif %}">
-                            {% if loop.index == 1 %}Ready to start{% else %}Locked{% endif %}
-                        </span>
-                        <a href="/lesson?path={{ path_id }}&lesson={{ lesson.title|lower|replace(' ', '_') }}" class="start-lesson {% if loop.index != 1 %}disabled{% endif %}">Start Lesson</a>
+                            
+                            <button type="button" class="submit-quiz" onclick="submitQuiz('{{ concept.id }}')">Submit Answers</button>
+                            <div class="result-success" id="success-{{ concept.id }}">Congratulations! You've mastered this concept.</div>
+                            <div class="result-error" id="error-{{ concept.id }}">Please review the material and try again.</div>
+                        </form>
                     </div>
-                    {% endif %}
-                    {% endfor %}
                 </div>
             </div>
-        </div>
-        
-        <!-- Section 2: Advanced Topics -->
-        <div class="path-section">
-            <div class="section-header">
-                <div class="section-number">2</div>
-                <div class="section-title">Advanced Applications</div>
-                <div class="section-expand"><i class="fas fa-chevron-down"></i></div>
-            </div>
-            <div class="section-content">
-                <div class="lessons-list">
-                    {% for lesson in path.lessons %}
-                    {% if loop.index > (path.lessons|length / 2)|round(0, 'ceil') %}
-                    <div class="lesson-card">
-                        <div class="lesson-number">{{ loop.index }}</div>
-                        <div class="lesson-details">
-                            <h3 class="lesson-title">{{ lesson.title }}</h3>
-                            <p class="lesson-description">{{ lesson.description|default('Apply advanced techniques to specific poker situations.') }}</p>
-                            <div class="lesson-meta">
-                                <span class="lesson-meta-item">
-                                    <i class="fas fa-clock"></i> 15 min
-                                </span>
-                                <span class="lesson-meta-item">
-                                    <i class="fas fa-chart-bar"></i> {{ path.level|title }}
-                                </span>
-                            </div>
-                        </div>
-                        <span class="lesson-status status-locked">Locked</span>
-                        <a href="#" class="start-lesson disabled">Start Lesson</a>
-                    </div>
-                    {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="path-footer">
-        <a href="/practice" class="practice-button">
-            <i class="fas fa-gamepad"></i> Practice These Concepts
-        </a>
+        {% endfor %}
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Toggle section expand/collapse
-        const sectionHeaders = document.querySelectorAll('.section-header');
-        sectionHeaders.forEach(header => {
-            header.addEventListener('click', () => {
-                header.classList.toggle('active');
-            });
-        });
+function submitQuiz(conceptId) {
+    const form = document.getElementById(`quiz-form-${conceptId}`);
+    const questions = form.querySelectorAll('.quiz-item');
+    const answers = [];
+    
+    // Collect answers
+    questions.forEach((q, index) => {
+        const selectedOption = form.querySelector(`input[name="question${index}"]:checked`);
+        if (selectedOption) {
+            answers.push(selectedOption.value);
+        } else {
+            answers.push(null);
+        }
     });
+    
+    // Check if all questions are answered
+    if (answers.includes(null)) {
+        alert('Please answer all questions before submitting.');
+        return;
+    }
+    
+    // Submit answers to the server
+    fetch('/api/learn/progress', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            concept_id: conceptId,
+            answers: answers
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const successMsg = document.getElementById(`success-${conceptId}`);
+            const errorMsg = document.getElementById(`error-${conceptId}`);
+            
+            if (data.completed) {
+                successMsg.style.display = 'block';
+                errorMsg.style.display = 'none';
+            } else {
+                successMsg.style.display = 'none';
+                errorMsg.style.display = 'block';
+            }
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to submit quiz. Please try again.');
+    });
+}
 </script>
 {% endblock %} 
